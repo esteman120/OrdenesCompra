@@ -68,12 +68,12 @@ export class SPServicio {
     }
 
     ObtenerCentroCosto(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
         return respuesta;
     }
 
     GuardarParticipacion(ObjParticipacion, idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.add(
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.add(
             {
                 Title: ObjParticipacion.ceco,
                 Nombre: ObjParticipacion.nombre,
@@ -86,12 +86,12 @@ export class SPServicio {
     }
 
     EliminarParticipacion(IdParticipacion){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(IdParticipacion).delete();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(IdParticipacion).delete();
         return respuesta;
     }
 
     async GuardarItemsOrden(ObjItem, idOrden): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.add(
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.add(
             {
                 Title: ObjItem.Title,
                 Elemento: ObjItem.Elemento,
@@ -106,82 +106,82 @@ export class SPServicio {
     }
 
     EliminarItemsOrden(ElementoId){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.getById(ElementoId).delete();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.getById(ElementoId).delete();
         return respuesta;
     }
 
     guardarOrden(ObjOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.add(ObjOrden);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.add(ObjOrden);
         return respuesta;
     }
 
     async ObtenerElementos(numeroId): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("numeroId eq "+numeroId).getAll();        
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("numeroId eq "+numeroId).getAll();        
         return respuesta;
     }
 
     GuardarServicio(ObjServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.add(ObjServicio);
         return respuesta;
     }
 
     ObtenerServicio(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud).getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud).getAll();
         return respuesta;
     }
 
     ModificarServicio(ObjServicio, idServicio){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.getById(idServicio).update(ObjServicio);
         return respuesta; 
     }
 
     EnviarNotificacion(objNotificacion){
-        let respuesta = this.ObtenerConfiguracionConPost().utility.sendEmail(objNotificacion);
+        let respuesta = this.ObtenerConfiguracion().utility.sendEmail(objNotificacion);
         return respuesta;
     }
 
     obtenerOrdenCompra(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
         return respuesta;
     }
 
     obtenerFirmas(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPostGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
+        let respuesta = this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
         return respuesta;
     }
 
     ValidarUsuarioGerente() {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
         return respuesta;
     } 
 
     obtenerParticipacion(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
         return respuesta;
     }
 
     obtenerItems(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
         return respuesta;
     }
 
     modificarOrden(idOrden, ObjOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).update(ObjOrden);
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).update(ObjOrden);
         return respuesta;
     }
 
     obtenerOrdenesPendientes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
         return respuesta;
     }
 
     // obtenerItems(idOrden){
-    //     let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+    //     let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
     //     return respuesta;
     // }
 
     // GuardarIdentificador(idOrden, idElemento){
-    //     let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.getById(idElemento).update({
+    //     let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.getById(idElemento).update({
     //         numeroId: 0,
     //         OrdenCompraId: idOrden
     //     });
