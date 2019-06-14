@@ -1,0 +1,369 @@
+<form autocomplete="off" [formGroup]="generarOrdenForm" (ngSubmit)="onSubmit(generarOrdenForm.value)">
+    <div class="container">
+        <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title><strong>Informacion de la orden</strong></mat-panel-title>
+                    <mat-panel-description>{{panelOpenState ? 'cerrar' : 'Click para desplegar' }}</mat-panel-description>
+                </mat-expansion-panel-header>
+                <div style="padding-top:20px; padding:15px">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Entidad / Compañia" formControlName="EntidadCompania">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('EntidadCompania').valid && generarOrdenForm.get('EntidadCompania').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Persona de Contacto" formControlName="PersonaContacto">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('PersonaContacto').valid && generarOrdenForm.get('PersonaContacto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Teléfono" formControlName="TelefonoContacto">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('TelefonoContacto').valid && generarOrdenForm.get('TelefonoContacto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Email contacto" formControlName="EmailContacto">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('EmailContacto').valid && generarOrdenForm.get('EmailContacto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Ciudad" formControlName="Ciudad">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('Ciudad').valid && generarOrdenForm.get('Ciudad').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Paginas enviadas" formControlName="Paginas">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('Paginas').valid && generarOrdenForm.get('Paginas').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                    </mat-card>
+                    <br>
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="JOB N°" formControlName="JobNumero">
+                                </mat-form-field>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('JobNumero').valid && generarOrdenForm.get('JobNumero').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">Descripción del JOB</label>
+                                    <textarea class="form-control" rows="3" formControlName="DescripcionJob"></textarea>
+                                    <mat-error>
+                                        <span *ngIf="!generarOrdenForm.get('DescripcionJob').valid && generarOrdenForm.get('DescripcionJob').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                    <br>
+                    <mat-card>
+                        <div class=" row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Reembolsable</label>
+                            <div class="col-sm-10">
+                                <mat-radio-group aria-label="Select an option" formControlName="Reembolsable" (change)="radioChange($event)">
+                                    <mat-radio-button value="true" style="margin-right: 14px;">SI</mat-radio-button>
+                                    <mat-radio-button value="false">NO</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('Reembolsable').valid && generarOrdenForm.get('Reembolsable').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div *ngIf="!Reembolso">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label>Nombre</mat-label>
+                                        <mat-select formControlName="NombreCECO" (selectionChange)="seleccionarCECO($event)">
+                                            <mat-option *ngFor="let item of CentroCosto" [value]="item.centroCosto">
+                                                {{item.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error>
+                                        <span *ngIf="!generarOrdenForm.get('NombreCECO').valid && generarOrdenForm.get('NombreCECO').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                    <mat-error>
+                                        <span *ngIf="validarNombreCECO"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <mat-form-field style="width: 100%">
+                                        <input matInput placeholder="CECO" formControlName="CECO" readonly>
+                                    </mat-form-field>
+                                    <mat-error>
+                                        <span *ngIf="!generarOrdenForm.get('CECO').valid && generarOrdenForm.get('CECO').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                    <mat-error>
+                                        <span *ngIf="validarCECO"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field style="width: 100%">
+                                        <input matInput placeholder="N° JOB" numbersOnly formControlName="NumeroJobCECO">
+                                    </mat-form-field>
+                                    <mat-error>
+                                        <span *ngIf="!generarOrdenForm.get('NumeroJobCECO').valid && generarOrdenForm.get('NumeroJobCECO').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                    <mat-error>
+                                        <span *ngIf="validarNJOB"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field style="width: 100%">
+                                        <input matInput placeholder="% ASUMIDO" numbersOnly formControlName="PorcentajeAsumidoCECO">
+                                    </mat-form-field>
+                                    <mat-error>
+                                        <span *ngIf="!generarOrdenForm.get('PorcentajeAsumidoCECO').valid && generarOrdenForm.get('PorcentajeAsumidoCECO').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                    <mat-error>
+                                        <span *ngIf="validarPorcentajeCECO"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                    </mat-error>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary btnAgregarUN" (click)="AgregarParticipacion()">Agregar unidad</button>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="cabezeraTblUnidadNegocio">CECO</th>
+                                            <th scope="col" class="cabezeraTblUnidadNegocio">NOMBRE</th>
+                                            <th scope="col" class="cabezeraTblUnidadNegocio">N.JOB</th>
+                                            <th scope="col" class="cabezeraTblUnidadNegocio">% ASUMIDO</th>
+                                            <th scope="col" class="cabezeraTblUnidadNegocio">ELIMINAR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of participacion">
+                                            <th scope="row">{{item.ceco}}</th>
+                                            <td>{{item.nombre}}</td>
+                                            <td>{{item.Njob}}</td>
+                                            <td>{{item.asumido}}</td>
+                                            <td>
+                                                <button class="btnBorrar" (click)="eliminarParticipacion(item.id)"><i class="fa fa-close"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <br>
+        <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState1 = true" (closed)="panelOpenState1 = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title><strong>Agregar elementos</strong></mat-panel-title>
+                    <mat-panel-description>{{panelOpenState1 ? 'cerrar' : 'Click para desplegar' }}</mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-card>
+                    <div class="row">
+                        <div class="col-xs-12 col-12 col-md-4 form-group">
+                            <mat-form-field style="width: 100%">
+                                <input matInput [matDatepicker]="picker" placeholder="Fecha de solicitud" formControlName="FechaSolicitud">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-error>
+                                <span *ngIf="!generarOrdenForm.get('FechaSolicitud').valid && generarOrdenForm.get('FechaSolicitud').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                            </mat-error>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%">
+                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                            </mat-form-field>
+                            <mat-error>
+                                <span *ngIf="!generarOrdenForm.get('TiempoEntrega').valid && generarOrdenForm.get('TiempoEntrega').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                            </mat-error>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%">
+                                <input matInput placeholder="Rubro de presupuesto" formControlName="RubroPresupuesto">
+                            </mat-form-field>
+                            <mat-error>
+                                <span *ngIf="!generarOrdenForm.get('RubroPresupuesto').valid && generarOrdenForm.get('RubroPresupuesto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Justificación del gasto</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="JustificacionGasto"></textarea>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('JustificacionGasto').valid && generarOrdenForm.get('JustificacionGasto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+                <br>
+                <mat-card>
+                    <div class="row">
+                        <div class="col-md-5 offset-md-8">
+                            <button type="button" class="btn btn-primary btnAgregarUN" (click)="agregarItem(templateItems)">Agregar item</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">ITEM</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">ELEMENTO O SERVICIO</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">ESPECIFICACIONES</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">Cantidad</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">Valor Unitario</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">Valor total</th>
+                                    <th scope="col" class="cabezeraTblUnidadNegocio">Borrar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of ItemsGuardar">
+                                    <td>{{item.Title}}</td>
+                                    <td>{{item.Elemento}}</td>
+                                    <td>{{item.Especificaciones}}</td>
+                                    <td>{{item.Cantidad}}</td>
+                                    <td>{{item.ValorUnitario | number:'.2'}}</td>
+                                    <td>{{item.ValorTotal | number:'.2'}}</td>
+                                    <td>
+                                        <button class="btnBorrar" (click)="eliminarItem(item.numeroId)"><i class="fa fa-close"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr style="height: 3px;border: solid 1px #fff;background: #0e144e;">
+                    <div style="text-align: -webkit-right;">
+                        <table style="width: 40%;max-width: 100%; background:#0e144e;">
+                            <tr>
+                                <td style="text-align:right; color: #ffffff;" width="25%">Subtotal:</td>
+                                <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">${{Subtotal | number:'.2-2'}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right; color: #ffffff;" width="25%">IVA(19%):</td>
+                                <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">{{Iva | number:'.2-2'}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right; color: #ffffff; font-weight: bold;" width="25%">TOTAL:</td>
+                                <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">${{Total | number:'.2-2'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success">Guardar Orden</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<ng-template #templateItems>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Agregar item</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%">
+                    <input matInput placeholder="ITEM" [(ngModel)]="item">
+                </mat-form-field>
+                <mat-error>
+                    <span *ngIf="validarItem"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                </mat-error>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%">
+                    <input matInput placeholder="CANTIDAD" numbersOnly [(ngModel)]="Cantidad">
+                </mat-form-field>
+                <mat-error>
+                    <span *ngIf="validarCantidad"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                </mat-error>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%">
+                    <input matInput placeholder="VALOR UNITARIO" currencyMask [options]="{ prefix: ' ', thousands: '.', decimal: ',', align: 'left' , allowNegative: false, precision : 0 }" [(ngModel)]="ValorUnitario">
+                </mat-form-field>
+                <mat-error>
+                    <span *ngIf="validarValorUnitario"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                </mat-error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Elemento o servicio requerido</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="ElementoServicio"></textarea>
+                    <mat-error>
+                        <span *ngIf="validarElementoServicio"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">ESPECIFICACIONES (Datos técnicos, dimensiones, referencias)</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="Especificaciones"></textarea>
+                    <mat-error>
+                        <span *ngIf="validarEspecificaciones"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="AgregarItems()">Guardar item</button>
+        <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancelar</button>
+    </div>
+
+</ng-template>
+<ng4-loading-spinner>...Procesando</ng4-loading-spinner>

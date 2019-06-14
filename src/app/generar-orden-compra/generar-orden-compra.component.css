@@ -1,0 +1,20 @@
+.cabezeraTblUnidadNegocio {
+    font-weight: bold;
+    width: 11.5;
+    background: #0e144e;
+    color: #fff;
+}
+
+.btnAgregarUN {
+    margin-bottom: 9px;
+    margin-left: 23px;
+}
+
+.btnBorrar {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 5px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}

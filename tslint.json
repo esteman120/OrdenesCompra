@@ -16,7 +16,7 @@
     "interface-name": false,
     "max-classes-per-file": false,
     "max-line-length": [
-      true,
+      false,
       140
     ],
     "member-access": false,
@@ -51,7 +51,7 @@
     "no-use-before-declare": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [
-      true,
+      false,
       "as-needed"
     ],
     "object-literal-sort-keys": false,
@@ -70,6 +70,33 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
+    "no-trailing-whitespace": false,    
+    "comment-format": [
+      false,
+      "check-space"
+    ],
+    "one-line": [
+      false,
+      "check-open-brace",
+      "check-whitespace",
+      "check-else",
+      "check-catch",
+      "check-finally"
+    ],
+    "align": [
+      false,
+      "elements",
+      "members",
+      "parameters",
+      "statements"
+    ],
+    "semicolon": [
+      false,
+      "always",
+      "strict-bound-class-methods"
+    ],
+    "prefer-const": false,
+    
   }
 }
