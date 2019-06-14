@@ -176,7 +176,7 @@ export class SPServicio {
     }
 
     obtenerMisOrdenes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
+        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").orderBy("Id",true).getAll();
         return respuesta;
     }
 
