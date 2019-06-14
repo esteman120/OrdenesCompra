@@ -2,7 +2,7 @@
     <mat-accordion>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
-                <mat-panel-title><strong>Mis solicitudes</strong></mat-panel-title>
+                <mat-panel-title><strong>Mis Ordenes</strong></mat-panel-title>
                 <mat-panel-description>{{panelOpenState ? 'cerrar' : 'Click para desplegar' }}</mat-panel-description>
             </mat-expansion-panel-header>
             <div class="mat-elevation-z8">
@@ -52,10 +52,11 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    <br>
     <mat-accordion>
         <mat-expansion-panel (opened)="panelOpenState1 = true" (closed)="panelOpenState1 = false">
             <mat-expansion-panel-header>
-                <mat-panel-title><strong>Informacion de la orden</strong></mat-panel-title>
+                <mat-panel-title><strong>Ordenes Pendientes</strong></mat-panel-title>
                 <mat-panel-description>{{panelOpenState1 ? 'cerrar' : 'Click para desplegar' }}</mat-panel-description>
             </mat-expansion-panel-header>
             <div class="mat-elevation-z8">
