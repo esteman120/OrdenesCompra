@@ -71,6 +71,10 @@ export class EditarOrdenesComponent implements OnInit {
   ResponsableSiguiente: any;
   motivoDevolucion: string;
   validarDevolucion: boolean;
+  PorcentajeIva: any;
+  TieneIva: boolean;
+  PorcentajeIvaUtilizar: number;
+  SoloLectura: boolean;
 
   constructor(
     private servicio: SPServicio,
@@ -104,6 +108,10 @@ export class EditarOrdenesComponent implements OnInit {
     this.NumeroIdentificador = Math.floor(
       Math.random() * (999 - 100 + 1) + 100
     );
+    this.PorcentajeIva = 0;
+    this.PorcentajeIvaUtilizar = 0;
+    this.TieneIva = true;
+    this.SoloLectura = true;
   }
 
   ngOnInit() {
@@ -124,7 +132,9 @@ export class EditarOrdenesComponent implements OnInit {
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: ["", Validators.required],
-      JustificacionGasto: ["", Validators.required]
+      JustificacionGasto: ["", Validators.required],
+      IvaSiNo: ["si", Validators.required],
+      TipoMoneda: ["COP", Validators.required]
     }); 
 
     this.consultarOrden();
@@ -151,6 +161,10 @@ export class EditarOrdenesComponent implements OnInit {
       (respuesta)=>{
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
+        this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
+        if (this.CodigoEstado === 5 || this.CodigoEstado === 6) {
+          this.SoloLectura = false;
+        }
         this.editarOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
         this.editarOrdenForm.controls["PersonaContacto"].setValue(this.ObjOrdenCompra.PersonaContacto);
         this.editarOrdenForm.controls["TelefonoContacto"].setValue(this.ObjOrdenCompra.TelefonoContacto);
@@ -165,8 +179,7 @@ export class EditarOrdenesComponent implements OnInit {
         else{
           this.editarOrdenForm.controls["Reembolsable"].setValue("false");
           this.obtenerParticipacion();
-        }
-        
+        }        
         this.Reembolso = this.ObjOrdenCompra.Reembolsable;
         this.editarOrdenForm.controls["NombreCECO"].setValue(this.ObjOrdenCompra.NombreCECO);
         this.editarOrdenForm.controls["CECO"].setValue(this.ObjOrdenCompra.CECO);
@@ -176,7 +189,11 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["TiempoEntrega"].setValue(this.ObjOrdenCompra.TiempoEntrega);
         this.editarOrdenForm.controls["RubroPresupuesto"].setValue(this.ObjOrdenCompra.RubroPresupuesto);
         this.editarOrdenForm.controls["JustificacionGasto"].setValue(this.ObjOrdenCompra.JustificacionGasto);
-        this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
+        let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no"; 
+        this.editarOrdenForm.controls["IvaSiNo"].setValue(coniva);
+        this.editarOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
+        
         
         this.usuarioSolicitante = this.ObjOrdenCompra.NombreSolicitanteId;
         this.UsuarioJefe = this.ObjOrdenCompra.JefeDirectoId;
@@ -202,7 +219,7 @@ export class EditarOrdenesComponent implements OnInit {
               this.Total = this.Total + x.ValorTotal;
           });
       
-          this.Iva = this.Total * 0.19;
+          this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
           this.Subtotal = this.Total - this.Iva;
         }
       ).catch(
@@ -300,12 +317,27 @@ export class EditarOrdenesComponent implements OnInit {
       .ObtenerCentroCosto()
       .then(res => {
         this.CentroCosto = centroCostos.fromJsonList(res);
+        this.obtenerConfiguracion(); 
         this.spinnerService.hide();
       })
       .catch(error => {
         this.mostrarError("SE ha producido un error al cargar los centros de costos");
         console.log(error);
       });
+  }
+
+  obtenerConfiguracion(): any {
+    this.servicio.ObtenerConfiguracionApp().then(
+       (res)=>{
+         this.PorcentajeIva = res[0].ValorIva; 
+         this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+         this.spinnerService.hide();        
+       }
+    )
+    .catch(error => {
+      this.mostrarError("Se ha producido un error al cargar el iva");
+      console.log(error);
+    });
   }
 
   radioChange(item) {
@@ -319,6 +351,31 @@ export class EditarOrdenesComponent implements OnInit {
 
   seleccionarCECO(item) {
     this.editarOrdenForm.controls["CECO"].setValue(item.value);
+  }
+
+  SeleccionIva(item){
+    this.Total = 0
+    if (item.value === "si") {
+      this.TieneIva = true;
+      this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+      if (this.ItemsGuardar.length>0) {
+        this.ItemsGuardar.map(x=>{
+          this.Total = this.Total + x.ValorTotal;
+        });
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        this.Subtotal = this.Total - this.Iva;
+      }
+    } else {      
+      this.TieneIva = false;
+      this.PorcentajeIvaUtilizar = 0;
+      if (this.ItemsGuardar.length>0) {
+        this.ItemsGuardar.map(x=>{
+          this.Total = this.Total + x.ValorTotal;
+        });
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        this.Subtotal = this.Total - this.Iva;
+      }
+    }
   }
 
   AgregarParticipacion() {
@@ -489,7 +546,7 @@ export class EditarOrdenesComponent implements OnInit {
             this.Total = this.Total + x.ValorTotal;
         });
     
-        this.Iva = this.Total * 0.19;
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
         this.Subtotal = this.Total - this.Iva;
         this.validarItem = false;
         this.validarCantidad = false;
@@ -524,8 +581,8 @@ export class EditarOrdenesComponent implements OnInit {
         this.ItemsGuardar.map(x=>{
             this.Total = this.Total + x.ValorTotal;
         });
-        this.Subtotal = this.Total / 1.19;
-        this.Iva = this.Total - this.Subtotal;
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        this.Subtotal = this.Total - this.Iva;
         this.spinnerService.hide();
       }
     ).catch(
@@ -568,6 +625,8 @@ export class EditarOrdenesComponent implements OnInit {
     let TiempoEntrega = this.editarOrdenForm.controls["TiempoEntrega"].value;
     let RubroPresupuesto = this.editarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.editarOrdenForm.controls["JustificacionGasto"].value;
+    let coniva = this.TieneIva;
+    let TipoMoneda = this.editarOrdenForm.controls["TipoMoneda"].value;
     let Subtotal = this.Subtotal;
     let Iva = this.Iva;
     let Total = this.Total;
@@ -586,6 +645,9 @@ export class EditarOrdenesComponent implements OnInit {
       TiempoEntrega: TiempoEntrega,
       JustificacionGasto: JustificacionGasto,
       RubroPresupuesto: RubroPresupuesto,
+      ConIva: coniva,
+      Moneda: TipoMoneda,
+      PorcentajeIva: this.PorcentajeIvaUtilizar,
       Subtotal: Subtotal,
       iva: Iva,
       Total: Total,

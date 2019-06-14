@@ -45,6 +45,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
   Iva: number;
   usuarioActual: Usuario;
   SolicitadoPor: any;
+  PorcentajeIva: any;
+  TieneIva: boolean;
+  PorcentajeIvaUtilizar: any;
 
   constructor(
     private servicio: SPServicio,
@@ -77,6 +80,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.NumeroIdentificador = Math.floor(
       Math.random() * (999 - 100 + 1) + 100
     );
+    this.PorcentajeIva = 0;
+    this.PorcentajeIvaUtilizar = 0;
+    this.TieneIva = true;
   }
 
   ngOnInit() {    
@@ -98,11 +104,10 @@ export class GenerarOrdenCompraComponent implements OnInit {
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: ["", Validators.required],
-      JustificacionGasto: ["", Validators.required]
-    });    
-    // let usuarioActual = sessionStorage.getItem("usuario");    
-    // this.usuarioActual = JSON.parse(usuarioActual);
-    // this.SolicitadoPor = this.usuarioActual.id;
+      JustificacionGasto: ["", Validators.required],
+      IvaSiNo: ["si", Validators.required],
+      TipoMoneda: ["COP", Validators.required]
+    });        
     this.ObtenerUsuarioActual();
     
   }
@@ -141,12 +146,26 @@ export class GenerarOrdenCompraComponent implements OnInit {
       .ObtenerCentroCosto()
       .then(res => {
         this.CentroCosto = centroCostos.fromJsonList(res);
-        this.spinnerService.hide();
+        this.obtenerConfiguracion();        
       })
       .catch(error => {
         this.mostrarError("Se ha producido un error al cargar los centros de costos");
         console.log(error);
       });
+  }
+
+  obtenerConfiguracion(): any {
+    this.servicio.ObtenerConfiguracionApp().then(
+       (res)=>{
+         this.PorcentajeIva = res[0].ValorIva; 
+         this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+         this.spinnerService.hide();        
+       }
+    )
+    .catch(error => {
+      this.mostrarError("Se ha producido un error al cargar el iva");
+      console.log(error);
+    });
   }
 
   MostrarExitoso(mensaje: string) {
@@ -186,6 +205,31 @@ export class GenerarOrdenCompraComponent implements OnInit {
   seleccionarCECO(item) {
     this.generarOrdenForm.controls["CECO"].setValue(item.value);
   }
+
+  SeleccionIva(item){
+    this.Total = 0
+    if (item.value === "si") {
+      this.TieneIva = true;
+      this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+      if (this.ItemsGuardar.length>0) {
+        this.ItemsGuardar.map(x=>{
+          this.Total = this.Total + x.ValorTotal;
+        });
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        this.Subtotal = this.Total - this.Iva;
+      }
+    } else {      
+      this.TieneIva = false;
+      this.PorcentajeIvaUtilizar = 0;
+      if (this.ItemsGuardar.length>0) {
+        this.ItemsGuardar.map(x=>{
+          this.Total = this.Total + x.ValorTotal;
+        });
+        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        this.Subtotal = this.Total - this.Iva;
+      }
+    }
+  }  
 
   radioChange(item) {
     if (item.value === "true") {
@@ -303,7 +347,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
         this.Total = this.Total + x.ValorTotal;
     });
 
-    this.Iva = this.Total * 0.19;
+    this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
     this.Subtotal = this.Total - this.Iva;
     this.validarItem = false;
     this.validarCantidad = false;
@@ -329,8 +373,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.ItemsGuardar.map(x=>{
         this.Total = this.Total + x.ValorTotal;
     });
-    this.Subtotal = this.Total / 1.19;
-    this.Iva = this.Total - this.Subtotal;
+    this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+    this.Subtotal = this.Total - this.Iva;
     this.spinnerService.hide();
   }
 
@@ -371,6 +415,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let TiempoEntrega = this.generarOrdenForm.controls["TiempoEntrega"].value;
     let RubroPresupuesto = this.generarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.generarOrdenForm.controls["JustificacionGasto"].value;
+    let coniva = this.TieneIva;
+    let TipoMoneda = this.generarOrdenForm.controls["TipoMoneda"].value;
     let Subtotal = this.Subtotal;
     let Iva = this.Iva;
     let Total = this.Total;
@@ -389,6 +435,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
       TiempoEntrega: TiempoEntrega,
       JustificacionGasto: JustificacionGasto,
       RubroPresupuesto: RubroPresupuesto,
+      ConIva: coniva,
+      Moneda: TipoMoneda,
+      PorcentajeIva: this.PorcentajeIvaUtilizar,
       Subtotal: Subtotal,
       iva: Iva,
       Total: Total,
@@ -416,8 +465,6 @@ export class GenerarOrdenCompraComponent implements OnInit {
           else {
               this.GuardarItemsOrden(idOrden, objServicio);
           }     
-             
-          // this.GuardarItemsOrden(idOrden, objServicio);
       }
     ).catch(
       (error)=>{
