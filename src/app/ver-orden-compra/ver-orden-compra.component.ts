@@ -335,7 +335,9 @@ export class VerOrdenCompraComponent implements OnInit {
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>La orden N° '+this.idOrdenCompra+' ha sido aprobada</p>';
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido aprobada</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
