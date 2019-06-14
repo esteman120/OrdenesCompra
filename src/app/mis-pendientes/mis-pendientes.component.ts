@@ -19,8 +19,12 @@ export class MisPendientesComponent implements OnInit {
   usuarioActual: Usuario;
   empty: boolean;
   dataSource;
+  dataSource2;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator2: MatPaginator;
   ObjOrdenes: Ordenes[];
+  ObjOrdenes2: Ordenes[];
+  empty2: boolean;
   
 
   constructor(private servicio: SPServicio,public toastr: ToastrManager,     
@@ -76,6 +80,7 @@ export class MisPendientesComponent implements OnInit {
           this.ObjOrdenes = Ordenes.fromJsonList(respuesta);
           this.dataSource = new MatTableDataSource(this.ObjOrdenes);
           this.dataSource.paginator = this.paginator;
+          this.obtenerMisOrdenes(this.usuarioActual.id);
           this.spinnerService.hide();
         }
         else {
@@ -91,9 +96,32 @@ export class MisPendientesComponent implements OnInit {
     )
   }
 
+  obtenerMisOrdenes(id: number): any {
+    this.servicio.obtenerMisOrdenes(this.usuarioActual.id).then(
+      (respuesta)=>{
+        if (respuesta.length > 0) {
+          this.empty2 = false;
+          this.ObjOrdenes2 = Ordenes.fromJsonList(respuesta);
+          this.dataSource2 = new MatTableDataSource(this.ObjOrdenes2);
+          this.dataSource2.paginator = this.paginator2;          
+          this.spinnerService.hide();
+        }
+        else {
+          this.empty2 = true;
+        }
+      }
+    )
+    .catch(
+      (error)=>{
+        console.log(error);
+        
+      }
+    )
+  }
+
   AbrirOrden(id, CodEstado){
     
-    let idOrden = "U2FsdG"+id+"VkX182";
+    let idOrden = "U2FsdGVkX182"+id;
     
     if (CodEstado === 6 || CodEstado === 5) {
       this.router.navigateByUrl('/editar-orden?id='+idOrden)

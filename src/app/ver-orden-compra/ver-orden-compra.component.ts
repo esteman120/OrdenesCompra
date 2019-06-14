@@ -147,7 +147,7 @@ export class VerOrdenCompraComponent implements OnInit {
   consultarOrden(): any {
     
     let Parametro = this.getParams(window.location.href);    
-    this.idOrdenCompra = Parametro["id"].substring(6, 8);
+    this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
     
     this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       (respuesta)=>{
@@ -335,9 +335,7 @@ export class VerOrdenCompraComponent implements OnInit {
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>La orden N° '+this.idOrdenCompra+' ha sido aprobada</p>'+
-                            '<br>'+
-                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/mis-ordenes" target="_blank">aquí</a>.</p>';
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido aprobada</p>';
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,

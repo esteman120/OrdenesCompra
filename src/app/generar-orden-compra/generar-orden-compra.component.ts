@@ -352,6 +352,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
       }        
     }
 
+    if (this.ItemsGuardar.length === 0) {
+      this.spinnerService.hide(); 
+        this.mostrarAdvertencia("La orden debe tener por lo menos un item a comprar");   
+        return false;
+    }
+
     let EntradaCompania = this.generarOrdenForm.controls["EntidadCompania"].value;
     let PersonaContacto = this.generarOrdenForm.controls["PersonaContacto"].value;
     let TelefonoContacto = this.generarOrdenForm.controls["TelefonoContacto"].value;
@@ -403,8 +409,14 @@ export class GenerarOrdenCompraComponent implements OnInit {
             ResponsableActualId: this.usuarioActual.IdJefeDirecto,
             Estado: "En revisión del Jefe",
             idServicio: idOrden
-          }       
-            this.GuardarParticipacion(idOrden, objServicio); 
+          } 
+          if (this.participacion.length>0) {
+            this.GuardarParticipacion(idOrden, objServicio);
+          } 
+          else {
+              this.GuardarItemsOrden(idOrden, objServicio);
+          }     
+             
           // this.GuardarItemsOrden(idOrden, objServicio);
       }
     ).catch(
@@ -421,7 +433,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.servicio.GuardarParticipacion(element, idOrden).then(
           (resultado)=>{
             contador++;
-            if (contador === this.ItemsGuardar.length) {              
+            if (contador === this.participacion.length) {              
               this.GuardarItemsOrden(idOrden, objServicio);
             }
           }

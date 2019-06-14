@@ -175,6 +175,11 @@ export class SPServicio {
         return respuesta;
     }
 
+    obtenerMisOrdenes(idUsuario){
+        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
+        return respuesta;
+    }
+
     // obtenerItems(idOrden){
     //     let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
     //     return respuesta;

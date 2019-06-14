@@ -145,7 +145,7 @@ export class EditarOrdenesComponent implements OnInit {
 
   consultarOrden(): any {    
     let Parametro = this.getParams(window.location.href);    
-    this.idOrdenCompra = Parametro["id"].substring(6, 8);
+    this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
     
     this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       (respuesta)=>{
