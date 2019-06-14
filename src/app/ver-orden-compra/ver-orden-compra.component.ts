@@ -401,7 +401,7 @@ export class VerOrdenCompraComponent implements OnInit {
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el jefe</p>'+
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el Gerente Administrativo</p>'+
                             '<br>'+
                             '<strong>Motivo de la devolición:</strong>'+
                             '<p>'+this.motivoDevolucion+'</p>'+
