@@ -71,6 +71,10 @@ export class VerOrdenCompraComponent implements OnInit {
   ResponsableSiguiente: string;
   motivoDevolucion: string;
   validarDevolucion: boolean;
+  PorcentajeIva: any;
+  PorcentajeIvaUtilizar: number;
+  TieneIva: boolean;
+  SoloLectura: boolean;
 
   constructor(
     private servicio: SPServicio,
@@ -104,7 +108,11 @@ export class VerOrdenCompraComponent implements OnInit {
     this.validarDevolucion = false;
     this.NumeroIdentificador = Math.floor(
       Math.random() * (999 - 100 + 1) + 100
-    );
+    );    
+    this.PorcentajeIva = 0;
+    this.PorcentajeIvaUtilizar = 0;
+    this.TieneIva = true;
+    this.SoloLectura = false;
   }
 
   ngOnInit() {
@@ -125,10 +133,41 @@ export class VerOrdenCompraComponent implements OnInit {
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: ["", Validators.required],
-      JustificacionGasto: ["", Validators.required]
+      JustificacionGasto: ["", Validators.required],
+      IvaSiNo: ["si", Validators.required],
+      TipoMoneda: ["COP", Validators.required]
     }); 
+    this.ObtenerUsuarioActual();
+    
+  }
 
-    this.consultarOrden();
+  ObtenerUsuarioActual() {
+    this.servicio.ObtenerUsuarioActual().subscribe(
+      (respuesta) => {
+        this.usuarioActual = new Usuario(respuesta.Title, respuesta.Email, respuesta.Id);        
+        this.SolicitadoPor = this.usuarioActual.id;
+        this.servicio.obtenerJefe(this.usuarioActual.id).then(
+          (res)=>{
+            
+            if (res[0].JefeId !== null) {
+              this.usuarioActual.IdJefeDirecto = res[0].JefeId;
+              this.usuarioActual.NombreJefeDirecto = res[0].Jefe.Title;
+              this.usuarioActual.EmailJefeDirecto = res[0].Jefe.EMail;
+            }
+            this.usuarioActual.Area = res[0].Area;
+            this.consultarOrden();
+          }
+        ).catch(
+          (error)=>{
+              console.log(error);
+          }
+        );
+               
+      }, err => {
+        console.log('Error obteniendo usuario: ' + err);
+        this.mostrarError("Se ha producido un error al cargar el formulario");
+      }
+    )
   }
 
   getParams(url){
@@ -176,8 +215,18 @@ export class VerOrdenCompraComponent implements OnInit {
         this.VerOrdenForm.controls["FechaSolicitud"].setValue(this.ObjOrdenCompra.FechaSolicitud);
         this.VerOrdenForm.controls["TiempoEntrega"].setValue(this.ObjOrdenCompra.TiempoEntrega);
         this.VerOrdenForm.controls["RubroPresupuesto"].setValue(this.ObjOrdenCompra.RubroPresupuesto);
-        this.VerOrdenForm.controls["JustificacionGasto"].setValue(this.ObjOrdenCompra.JustificacionGasto);
+        this.VerOrdenForm.controls["JustificacionGasto"].setValue(this.ObjOrdenCompra.JustificacionGasto); 
+        let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no";      
+        this.VerOrdenForm.controls["IvaSiNo"].setValue(coniva);
+        this.VerOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
+        if (this.CodigoEstado === 2 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
+          this.SoloLectura = true;
+        } 
+        else if (this.CodigoEstado === 3 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
+          this.SoloLectura = true;
+        }
         // if(this.CodigoEstado === 5 || this.CodigoEstado === 6){
         //   this.router.navigate(['/editar-orden', Parametro]);
         // }
@@ -205,7 +254,7 @@ export class VerOrdenCompraComponent implements OnInit {
               this.Total = this.Total + x.ValorTotal;
           });
       
-          this.Iva = this.Total * 0.19;
+          this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
           this.Subtotal = this.Total - this.Iva;
         }
       ).catch(

@@ -32,7 +32,7 @@ export class MisPendientesComponent implements OnInit {
 
   }
 
-  displayedColumns: string[] = ['NumeroOrden','Solicitante','JefeDirecto','fechaSolicitud','EntidadCompania', 'acciones'];
+  displayedColumns: string[] = ['NumeroOrden','Solicitante','JefeDirecto','fechaSolicitud','EntidadCompania','Estado','acciones'];
 
   ngOnInit() {
     this.spinnerService.show();
@@ -85,6 +85,7 @@ export class MisPendientesComponent implements OnInit {
         }
         else {
           this.empty = true;
+          this.obtenerMisOrdenes(this.usuarioActual.id);
         }
       }
     )
