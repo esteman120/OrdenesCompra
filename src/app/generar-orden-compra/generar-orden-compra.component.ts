@@ -91,7 +91,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       EntidadCompania: ["", Validators.required],
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
-      EmailContacto: ["", [Validators.required]],
+      EmailContacto: ["", [Validators.required, Validators.email]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
       JobNumero: ["", Validators.required],
@@ -212,21 +212,23 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.TieneIva = true;
       this.PorcentajeIvaUtilizar = this.PorcentajeIva;
       if (this.ItemsGuardar.length>0) {
-        this.ItemsGuardar.map(x=>{
-          this.Total = this.Total + x.ValorTotal;
-        });
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //   this.Total = this.Total + x.ValorTotal;
+        // });
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
       }
     } else {      
       this.TieneIva = false;
       this.PorcentajeIvaUtilizar = 0;
       if (this.ItemsGuardar.length>0) {
-        this.ItemsGuardar.map(x=>{
-          this.Total = this.Total + x.ValorTotal;
-        });
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //   this.Total = this.Total + x.ValorTotal;
+        // });
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
       }
     }
   }  
@@ -343,12 +345,13 @@ export class GenerarOrdenCompraComponent implements OnInit {
     } 
     
     this.ItemsGuardar.push(ObjGuardarItems);
-    this.ItemsGuardar.map(x=>{
-        this.Total = this.Total + x.ValorTotal;
-    });
+    this.calcularIva();
+    // this.ItemsGuardar.map(x=>{
+    //     this.Subtotal = this.Subtotal + x.ValorTotal;
+    // });
 
-    this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-    this.Subtotal = this.Total - this.Iva;
+    // this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
+    // this.Total = this.Subtotal + this.Iva;
     this.validarItem = false;
     this.validarCantidad = false;
     this.validarValorUnitario = false;
@@ -365,17 +368,40 @@ export class GenerarOrdenCompraComponent implements OnInit {
 
   }
 
-  eliminarItem(ElementoId){
+  calcularIva() {
+    this.Subtotal = 0;
+    this.ItemsGuardar.map(x=>{
+      this.Subtotal = this.Subtotal + x.ValorTotal;
+    });
+  
+    this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
+    this.Total = this.Subtotal + this.Iva;    
+  }
+
+  eliminarItem(ElementoId) {
     this.spinnerService.show();
     this.Total = 0;    
     let index = this.ItemsGuardar.findIndex(x=>x.id === ElementoId);
     this.ItemsGuardar.splice(index, 1);
-    this.ItemsGuardar.map(x=>{
-        this.Total = this.Total + x.ValorTotal;
-    });
-    this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-    this.Subtotal = this.Total - this.Iva;
+    this.calcularIva();
+    // this.ItemsGuardar.map(x=>{
+    //     this.Total = this.Total + x.ValorTotal;
+    // });
+    // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+    // this.Subtotal = this.Total - this.Iva;
     this.spinnerService.hide();
+  }
+
+  private AsignarFormatoFecha(FechaActividad: Date) {
+    let diaActividadExtraordinaria = FechaActividad.getDate();
+    let mesActividadExtraordinaria = FechaActividad.getMonth();
+    let anoActividadExtraordinaria = FechaActividad.getFullYear();
+    let hoy = new Date();
+    let horas = FechaActividad.getHours() === 0 ? hoy.getHours() : FechaActividad.getHours();
+    let minutos = FechaActividad.getMinutes() === 0 ? 1 : FechaActividad.getMinutes();
+    let segundos = FechaActividad.getSeconds() === 0 ? 1 : FechaActividad.getSeconds();
+    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, horas, minutos, segundos).toISOString();
+    return fechaRetornar;
   }
 
   async onSubmit(form: NgForm) {
@@ -412,6 +438,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let DescripcionJob = this.generarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.generarOrdenForm.controls["FechaSolicitud"].value;
+    FechaSolicitud = this.AsignarFormatoFecha(FechaSolicitud); 
     let TiempoEntrega = this.generarOrdenForm.controls["TiempoEntrega"].value;
     let RubroPresupuesto = this.generarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.generarOrdenForm.controls["JustificacionGasto"].value;
