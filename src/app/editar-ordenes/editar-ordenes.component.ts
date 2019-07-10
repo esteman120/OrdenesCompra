@@ -215,12 +215,13 @@ export class EditarOrdenesComponent implements OnInit {
     this.servicio.obtenerItems(this.idOrdenCompra).then(
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
-            this.ItemsGuardar.map(x=>{
-              this.Total = this.Total + x.ValorTotal;
-          });
+            this.calcularIva();
+          //   this.ItemsGuardar.map(x=>{
+          //     this.Total = this.Total + x.ValorTotal;
+          // });
       
-          this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-          this.Subtotal = this.Total - this.Iva;
+          // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+          // this.Subtotal = this.Total - this.Iva;
         }
       ).catch(
         (error)=>{
@@ -359,21 +360,23 @@ export class EditarOrdenesComponent implements OnInit {
       this.TieneIva = true;
       this.PorcentajeIvaUtilizar = this.PorcentajeIva;
       if (this.ItemsGuardar.length>0) {
-        this.ItemsGuardar.map(x=>{
-          this.Total = this.Total + x.ValorTotal;
-        });
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //   this.Total = this.Total + x.ValorTotal;
+        // });
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
       }
     } else {      
       this.TieneIva = false;
       this.PorcentajeIvaUtilizar = 0;
       if (this.ItemsGuardar.length>0) {
-        this.ItemsGuardar.map(x=>{
-          this.Total = this.Total + x.ValorTotal;
-        });
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //   this.Total = this.Total + x.ValorTotal;
+        // });
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
       }
     }
   }
@@ -533,6 +536,16 @@ export class EditarOrdenesComponent implements OnInit {
 
   }
 
+  calcularIva() {
+    this.Subtotal = 0;
+    this.ItemsGuardar.map(x=>{
+      this.Subtotal = this.Subtotal + x.ValorTotal;
+    });
+  
+    this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
+    this.Total = this.Subtotal + this.Iva;    
+  }
+
   async GuardarItemsOrden(ObjGuardarItems){
     let contador =0;
   
@@ -542,12 +555,13 @@ export class EditarOrdenesComponent implements OnInit {
         let idItem = resultado.data.Id;
         this.ItemsGuardar["id"] = idItem;
         this.ItemsGuardar.push(ObjGuardarItems);
-        this.ItemsGuardar.map(x=>{
-            this.Total = this.Total + x.ValorTotal;
-        });
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //     this.Total = this.Total + x.ValorTotal;
+        // });
     
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
         this.validarItem = false;
         this.validarCantidad = false;
         this.validarValorUnitario = false;
@@ -578,11 +592,12 @@ export class EditarOrdenesComponent implements OnInit {
       (res)=>{
         let index = this.ItemsGuardar.findIndex(x=>x.id === ElementoId);
         this.ItemsGuardar.splice(index, 1);
-        this.ItemsGuardar.map(x=>{
-            this.Total = this.Total + x.ValorTotal;
-        });
-        this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        this.Subtotal = this.Total - this.Iva;
+        this.calcularIva();
+        // this.ItemsGuardar.map(x=>{
+        //     this.Total = this.Total + x.ValorTotal;
+        // });
+        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
+        // this.Subtotal = this.Total - this.Iva;
         this.spinnerService.hide();
       }
     ).catch(

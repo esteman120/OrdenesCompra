@@ -3,7 +3,7 @@
         <mat-accordion>
             <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                 <mat-expansion-panel-header>
-                    <mat-panel-title><strong>Informacion de la orden</strong></mat-panel-title>
+                    <mat-panel-title><strong>Información de la orden</strong></mat-panel-title>
                     <mat-panel-description>{{panelOpenState ? 'cerrar' : 'Click para desplegar' }}</mat-panel-description>
                 </mat-expansion-panel-header>
                 <div style="padding-top:20px; padding:15px">
@@ -43,6 +43,9 @@
                                 </mat-form-field>
                                 <mat-error>
                                     <span *ngIf="!generarOrdenForm.get('EmailContacto').valid && generarOrdenForm.get('EmailContacto').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                                <mat-error>
+                                    <span *ngIf="!generarOrdenForm.get('EmailContacto').valid"><small class="form-text">Formato de correo invalido</small></span>
                                 </mat-error>
                             </div>
                         </div>

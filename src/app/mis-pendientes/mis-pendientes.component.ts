@@ -21,7 +21,8 @@ export class MisPendientesComponent implements OnInit {
   dataSource;
   dataSource2;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatPaginator, {static: true}) paginator2: MatPaginator;
+  // @ViewChild(MatPaginator,{static: true},) paginator2: MatPaginator;
+
   ObjOrdenes: Ordenes[];
   ObjOrdenes2: Ordenes[];
   empty2: boolean;
@@ -33,6 +34,7 @@ export class MisPendientesComponent implements OnInit {
   }
 
   displayedColumns: string[] = ['NumeroOrden','Solicitante','JefeDirecto','fechaSolicitud','EntidadCompania','Estado','acciones'];
+  displayedColumns2: string[] = ['NumeroOrden','Solicitante','JefeDirecto','fechaSolicitud','EntidadCompania','Estado','acciones'];
 
   ngOnInit() {
     this.spinnerService.show();
@@ -104,7 +106,7 @@ export class MisPendientesComponent implements OnInit {
           this.empty2 = false;
           this.ObjOrdenes2 = Ordenes.fromJsonList(respuesta);
           this.dataSource2 = new MatTableDataSource(this.ObjOrdenes2);
-          this.dataSource2.paginator = this.paginator2;          
+          // this.dataSource2.paginator = this.paginator2;          
           this.spinnerService.hide();
         }
         else {

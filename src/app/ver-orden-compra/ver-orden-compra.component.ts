@@ -379,7 +379,7 @@ export class VerOrdenCompraComponent implements OnInit {
         let objAprobar ={
             Estado: this.EstadoSiguiente,
             CodigoEstado: 4,
-            ResponsableActualId: null
+            ResponsableActualId: -1
         }        
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
