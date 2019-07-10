@@ -124,6 +124,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
               this.usuarioActual.IdJefeDirecto = res[0].JefeId;
               this.usuarioActual.NombreJefeDirecto = res[0].Jefe.Title;
               this.usuarioActual.EmailJefeDirecto = res[0].Jefe.EMail;
+              console.log(this.usuarioActual.EmailJefeDirecto);
             }
             this.usuarioActual.Area = res[0].Area;
             this.obtenerCentroCostos();
