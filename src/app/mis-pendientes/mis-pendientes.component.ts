@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SPServicio } from '../Servicios/sp-servicio';
 import { Usuario } from '../Entidades/usuario';
@@ -20,8 +20,9 @@ export class MisPendientesComponent implements OnInit {
   empty: boolean;
   dataSource;
   dataSource2;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  // @ViewChild(MatPaginator,{static: true},) paginator2: MatPaginator;
+  
+  @ViewChild('MisPendientesPaginador', {read: MatPaginator, static:true}) MisPendientesPaginador: MatPaginator;
+  @ViewChild('MisOrdenesPaginador', {read: MatPaginator, static:true}) MisOrdenesPaginador: MatPaginator;
 
   ObjOrdenes: Ordenes[];
   ObjOrdenes2: Ordenes[];
@@ -30,7 +31,6 @@ export class MisPendientesComponent implements OnInit {
 
   constructor(private servicio: SPServicio,public toastr: ToastrManager,     
     private spinnerService: Ng4LoadingSpinnerService, private route: ActivatedRoute,private router: Router) { 
-
   }
 
   displayedColumns: string[] = ['NumeroOrden','Solicitante','JefeDirecto','fechaSolicitud','EntidadCompania','Estado','acciones'];
@@ -81,7 +81,7 @@ export class MisPendientesComponent implements OnInit {
           this.empty = false;
           this.ObjOrdenes = Ordenes.fromJsonList(respuesta);
           this.dataSource = new MatTableDataSource(this.ObjOrdenes);
-          this.dataSource.paginator = this.paginator;
+          this.dataSource.paginator = this.MisPendientesPaginador;
           this.obtenerMisOrdenes(this.usuarioActual.id);
           this.spinnerService.hide();
         }
@@ -106,7 +106,7 @@ export class MisPendientesComponent implements OnInit {
           this.empty2 = false;
           this.ObjOrdenes2 = Ordenes.fromJsonList(respuesta);
           this.dataSource2 = new MatTableDataSource(this.ObjOrdenes2);
-          // this.dataSource2.paginator = this.paginator2;          
+          this.dataSource2.paginator = this.MisOrdenesPaginador;     
           this.spinnerService.hide();
         }
         else {
