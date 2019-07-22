@@ -125,7 +125,7 @@ export class VerOrdenCompraComponent implements OnInit {
       EmailContacto: ["", [Validators.required]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
+      JobNumero: [""],
       DescripcionJob: ["", Validators.required],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
