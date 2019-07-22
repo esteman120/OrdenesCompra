@@ -10,6 +10,7 @@ import { ActivatedRoute, Router} from '@angular/router';
 import { Usuario } from '../Entidades/usuario';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { element } from 'protractor';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-generar-orden-compra",
@@ -48,6 +49,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
   PorcentajeIva: any;
   TieneIva: boolean;
   PorcentajeIvaUtilizar: any;
+  ObjEmpresas: any[];
+  ConsecutivoConsultores: any;
+  ConsecutivoAsociados: any;
+  TipoConsecutivo: any;
+  IdRegConfiguracionApp: any;
+  filteredOptions: Observable<string[]>;
 
   constructor(
     private servicio: SPServicio,
@@ -88,13 +95,15 @@ export class GenerarOrdenCompraComponent implements OnInit {
   ngOnInit() {    
     this.spinnerService.show();
     this.generarOrdenForm = this.formBuilder.group({
-      EntidadCompania: ["", Validators.required],
+      nroOrden: [""],
+      EmpresaSolicitante: ["",  Validators.required],
+      EntidadCompania: ["", Validators.required],      
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
       EmailContacto: ["", [Validators.required, Validators.email]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
+      JobNumero: [""],
       DescripcionJob: ["", Validators.required],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
@@ -109,6 +118,41 @@ export class GenerarOrdenCompraComponent implements OnInit {
       TipoMoneda: ["COP", Validators.required]
     });        
     this.ObtenerUsuarioActual();
+    this.ObtenerEmpresasAraujo();
+
+      
+
+    // this.generarOrdenForm.valueChanges.subscribe(
+    //   (res)=>{
+    //     this.generarOrdenForm.controls['EmailContacto'].setValidators([Validators.email])
+    //     this.generarOrdenForm.controls['EmailContacto'].updateValueAndValidity()
+    //   }
+    // )
+      
+  }
+
+  ObtenerEmpresasAraujo(): any {
+    this.servicio.ObtenerEmpresasAraujo().then(
+      (res)=>{
+        this.ObjEmpresas = res;
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+        this.mostrarError("Error al cargar las empresas solicitantes");
+    }
+    );
+  }
+
+  seleccionarEmpresa(event){
+    let consecutivo = event.value.TipoConsecutivo;
+    this.TipoConsecutivo = consecutivo;
+    if (consecutivo === "Consultores") {
+      this.generarOrdenForm.controls["nroOrden"].setValue(this.ConsecutivoConsultores);      
+    }
+    else if (consecutivo === "Asociados") {
+      this.generarOrdenForm.controls["nroOrden"].setValue(this.ConsecutivoAsociados);
+    }
     
   }
 
@@ -158,7 +202,14 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.servicio.ObtenerConfiguracionApp().then(
        (res)=>{
          this.PorcentajeIva = res[0].ValorIva; 
+         this.IdRegConfiguracionApp = res[0].Id;
          this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+         let ConsecutivoConsultores = res[0].ConsecutivoConsultores;
+         ConsecutivoConsultores = ConsecutivoConsultores.split("-");
+         this.ConsecutivoConsultores = ConsecutivoConsultores[0] + "-" + (parseInt(ConsecutivoConsultores[1])+1);
+         let ConsecutivoAsociados = res[0].ConsecutivoAsociados;
+         ConsecutivoAsociados = ConsecutivoAsociados.split("-");
+         this.ConsecutivoAsociados = ConsecutivoAsociados[0] + "-" + (parseInt(ConsecutivoAsociados[1])+1);
          this.spinnerService.hide();        
        }
     )
@@ -243,7 +294,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   AgregarParticipacion() {
-    this.spinnerService.show();
+    this.spinnerService.show();    
     this.validarNombreCECO = false;
     this.validarCECO = false;
     this.validarNJOB = false;
@@ -255,6 +306,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let PorcentajeAsumidoCECO = this.generarOrdenForm.controls[
       "PorcentajeAsumidoCECO"
     ].value;
+
+    if (PorcentajeAsumidoCECO > 100) {
+      this.mostrarAdvertencia("El porcentaje asumido no puede ser superior al 100%");
+      this.spinnerService.hide();
+      return false;
+    }
 
     if (NombreCECO === "") {
       this.validarNombreCECO = true;
@@ -404,6 +461,77 @@ export class GenerarOrdenCompraComponent implements OnInit {
     return fechaRetornar;
   }
 
+  async ObtenerConsecutivoAsociados(): Promise<any>{
+    let ConsecutivoAsociado = "";
+    await this.servicio.ObtenerConsecutivoAsociado().then(
+      async (res)=>{
+        let ConsecutivoAsociados = res[0].ConsecutivoAsociados;
+        ConsecutivoAsociados = ConsecutivoAsociados.split("-");
+        this.ConsecutivoAsociados = ConsecutivoAsociados[0] + "-" + (parseInt(ConsecutivoAsociados[1])+1);
+        ConsecutivoAsociado = this.ConsecutivoAsociados;
+        let obj = {
+          ConsecutivoAsociados: ConsecutivoAsociado
+        }
+        let mensaje = await this.GuardrConsecutivo(this.IdRegConfiguracionApp, obj);
+        if (mensaje === "Error") {
+          ConsecutivoAsociado = "Error";
+        }
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        ConsecutivoAsociado = "Error";
+      }
+    );
+
+    return ConsecutivoAsociado;
+  }
+
+  async ObtenerConsecutivoConsultores(): Promise<any>{
+    let ConsecutivoConsultore = "";
+    await this.servicio.ObtenerConsecutivoConsultores().then(
+      async (res)=>{
+        let ConsecutivoConsultores = res[0].ConsecutivoConsultores;
+        ConsecutivoConsultores = ConsecutivoConsultores.split("-");
+        this.ConsecutivoConsultores = ConsecutivoConsultores[0] + "-" + (parseInt(ConsecutivoConsultores[1])+1); 
+        ConsecutivoConsultore = this.ConsecutivoConsultores;
+        let obj = {
+          ConsecutivoConsultores: ConsecutivoConsultore
+        }
+        let mensaje = await this.GuardrConsecutivo(this.IdRegConfiguracionApp, obj);
+        if (mensaje === "Error") {
+          ConsecutivoConsultore = "Error";
+        }
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        ConsecutivoConsultore = "Error";
+      }
+    );
+
+    return ConsecutivoConsultore;
+  }
+
+  async GuardrConsecutivo(IdRegConfiguracionApp, obj): Promise<any> {
+   let Mensaje = "";
+    await this.servicio.GuardarConsecutivo(IdRegConfiguracionApp, obj).then(
+      (res)=>{
+        Mensaje = "Exitoso";
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        Mensaje = "Error";
+      }
+    );
+
+    return Mensaje;
+  }
+
   async onSubmit(form: NgForm) {
     this.spinnerService.show();
 
@@ -447,6 +575,20 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let Subtotal = this.Subtotal;
     let Iva = this.Iva;
     let Total = this.Total;
+    let EmpresaSolicitante = this.generarOrdenForm.controls["EmpresaSolicitante"].value;
+    
+    let Consecutivo;
+    if(this.TipoConsecutivo==="Asociados"){
+      Consecutivo = await this.ObtenerConsecutivoAsociados();
+    }
+    else if(this.TipoConsecutivo==="Consultores"){
+      Consecutivo = await this.ObtenerConsecutivoConsultores();
+    }
+
+    if (Consecutivo === "" || Consecutivo === "Error") {
+      this.mostrarError("Error al asignar el numero consecutivo");
+      return false;
+    }
 
     let objOrden = {
       Title: EntradaCompania,
@@ -470,7 +612,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
       Total: Total,
       NombreSolicitanteId: this.SolicitadoPor,
       JefeDirectoId: this.usuarioActual.IdJefeDirecto,
-      ResponsableActualId: this.usuarioActual.IdJefeDirecto
+      ResponsableActualId: this.usuarioActual.IdJefeDirecto,
+      EmpresaSolicitante: EmpresaSolicitante.RazonSocial,
+      Consecutivo: Consecutivo
     }    
     
     this.servicio.guardarOrden(objOrden).then(

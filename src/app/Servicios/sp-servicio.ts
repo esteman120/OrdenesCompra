@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MzQ2MjM1MSwibmJmIjoxNTYzNDYyMzUxLCJleHAiOjE1NjM0OTE0NTEsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.icKi01NBRZ5ZVuHeqqEIrDvBym5yOlgBhavTMUtBKqBSN48fil48KIpUwA592YhfRjitDZLIn6dUfpX7kFbfee3eOHkxki6YY2kNoEi1JOLM7lgYZmSHAADSPbz9H_kt4-tYAS3jOSJ1Web35WdG021ddQl4xviD-aVADR4xn3ljLRd5vuWOIRwjk3TE_kMTKVO2S4TIahAsr5Pk-h-dtJohr_CeMt7OIaX-ShMzb_AuurU23JAwfQe4tdCZq2h1eJdYDQgh7md4lxctX2QllV0VG_MoFxZDKa3RivMovuOFzjWCWneAYwX382Dd57UnDFe6gaAnd_-wsylk0xChyw'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MzgwNjI0NiwibmJmIjoxNTYzODA2MjQ2LCJleHAiOjE1NjM4MzUzNDYsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.Nsfb4GEGob86JgcoI2xL8rYMELNYW4J67u1DhTdMxoMlR9RZs3rCMG7X8iN2umd4WHTz5UAqh3p6eEzVWdKRTLW9rEmyqO3rPoiyeZ_N_9C4AkHHXhzLfaVZ8YSdah3tLBUh14s5-mp17-7KoChV0RCcWiBm9wVPKcM3mUaf3nMh2yw59FuYwhEtgFwpY4HRliSZ92dCKMRKxszGfVo6BDR7a1u707H3UOZMPh6eW4BWOtJ7o9e0rjSTPJ6DxUrxuN57NwnhH3frXRRngubmT_8n3FlfX7BkHnMQsSX4FcVvQ7yCSp5V6551-AJN5QDcCT9a2HuJ2HELTWzsBEZ64g'
             }
         }, environment.urlWeb);
 
@@ -45,7 +45,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyIsImtpZCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MjM0MTAwNiwibmJmIjoxNTYyMzQxMDA2LCJleHAiOjE1NjIzNzAxMDYsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.Q5Ysab0_xcBtLO4qk9C1LV_OPESrcAxWPyssDCwQIZD_Em7AG7x4F9gb0ms5NfEwmFnhQhS9mzA1Sno23TfNE0gMG3frCQpHWVM-fKC7WWozAyejbq0annAdeuZx7jg7YqVqhcuE3bTV1tQCIhD0UUFNnZuU6pyEaEwZf9LJqdFLMg0COXLABR80-Y99T3ac-4Uqsbreeo_ba4eM8MySjy9OQpTik-zXLZHc0pXU-_BxQhZ4g2pYLxZJKbjyDF-68qQQdsFxuwds_e9BwOhZaD43Y8Fg5Gg3lsV-UcJyZJ53RgCL5yUax2RxDW3Ao8y8Y2t8ceP39J0Oj0sAhDQbow' 
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MzgwNjMyNywibmJmIjoxNTYzODA2MzI3LCJleHAiOjE1NjM4MzU0MjcsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.N6YysGETQzWe991xYoJIemjMgEJRcbyaDQAoYaPVwCxBJGIQpEr1pQvkfRjFaHuldopIZkNlMa54i8hLiRGTwk188VEAFutJ5kwWjpdu7a3SwkyVnkc0d_KX9fHq-6_dW32BG-WVXfcGubqnW5eoMhTYD60y5Ss0mBafK7YxOsyR3Ifyv6CQlAEgF1Zac7mrBo-gut8WZsBr-xq5F-7cKiB1gd-gFq4AVYI_J6H-5V8eJ5yKj6mLmJMidJ8SfGbOpN1SFrfnGrgPyyQ5w-wCRvXk37gie9XFjKCZ5aUDj3xRyh-FVYsVajEh3vjMn0SpynLCoarC-CjwbjhtLTbBpw' 
             }
         }, environment.urlWebGH);
 
@@ -183,6 +183,31 @@ export class SPServicio {
     ObtenerConfiguracionApp(){
         let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").getAll();
         return respuesta;
-    }   
+    } 
+    
+    ObtenerEmpresasAraujo(){
+        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        return respuesta;
+    }
+
+    ObtenerConsecutivos() {
+        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        return respuesta;
+    }
+
+    async ObtenerConsecutivoAsociado(): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
+        return respuesta;
+    }
+
+    async ObtenerConsecutivoConsultores(): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
+        return respuesta;
+    }
+
+    async GuardarConsecutivo(idRegistroConfig, ObjConsecutivo): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.getById(idRegistroConfig).update(ObjConsecutivo);
+        return respuesta;
+    }    
 
 }

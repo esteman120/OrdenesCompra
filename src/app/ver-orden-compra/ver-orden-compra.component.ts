@@ -117,6 +117,8 @@ export class VerOrdenCompraComponent implements OnInit {
 
   ngOnInit() {
     this.VerOrdenForm = this.formBuilder.group({
+      nroOrden: [""],
+      EmpresaSolicitante: ["",  Validators.required],
       EntidadCompania: ["", Validators.required],
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
@@ -219,6 +221,8 @@ export class VerOrdenCompraComponent implements OnInit {
         let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no";      
         this.VerOrdenForm.controls["IvaSiNo"].setValue(coniva);
         this.VerOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.VerOrdenForm.controls["nroOrden"].setValue(this.ObjOrdenCompra.Consecutivo);
+        this.VerOrdenForm.controls["EmpresaSolicitante"].setValue(this.ObjOrdenCompra.EmpresaSolicitante);
         this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
         if (this.CodigoEstado === 2 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
