@@ -279,17 +279,17 @@
                     <tr>
                         <td width="33.3%">
                             <span class="background" id="table-compra">Solicitante </span><br><br>
-                            <img src="{{firmaUsuario}}" width="50%" alt=""><br>
+                            <img src="{{firmaUsuario}}" width="50%" alt="" *ngIf="CodigoEstado === 2 || CodigoEstado === 3 || CodigoEstado === 4"><br>
                             <span>{{nombreUsuario}}</span><br>
                         </td>
                         <td width="33.3%">
                             <span class="background" id="table-compra">Gerente de unidad de negocio </span><br><br>
-                            <img src="{{firmaJefe}}" width="50%" alt=""><br>
+                            <img src="{{firmaJefe}}" width="50%" alt="" *ngIf="CodigoEstado === 3 || CodigoEstado === 4"><br>
                             <span>{{nombreJefe}}</span><br>
                         </td>
                         <td width="33.3%">
                             <span class="background" id="table-compra">Gerente Administrativo y Financiero</span><br><br>
-                            <img src="{{firmaGerente}}" width="50%" alt=""><br>
+                            <img src="{{firmaGerente}}" width="50%" alt="" *ngIf="CodigoEstado === 2 || CodigoEstado === 4"><br>
                             <span>{{nombreGerente}}</span><br>
                         </td>
                     </tr>

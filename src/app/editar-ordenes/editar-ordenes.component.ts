@@ -116,13 +116,15 @@ export class EditarOrdenesComponent implements OnInit {
 
   ngOnInit() {
     this.editarOrdenForm = this.formBuilder.group({
+      nroOrden: [""],
+      EmpresaSolicitante: ["",  Validators.required],
       EntidadCompania: ["", Validators.required],
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
       EmailContacto: ["", [Validators.required]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
+      JobNumero: [""],
       DescripcionJob: ["", Validators.required],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
@@ -192,6 +194,8 @@ export class EditarOrdenesComponent implements OnInit {
         let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no"; 
         this.editarOrdenForm.controls["IvaSiNo"].setValue(coniva);
         this.editarOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.editarOrdenForm.controls["nroOrden"].setValue(this.ObjOrdenCompra.Consecutivo);
+        this.editarOrdenForm.controls["EmpresaSolicitante"].setValue(this.ObjOrdenCompra.EmpresaSolicitante);
         this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         
         
