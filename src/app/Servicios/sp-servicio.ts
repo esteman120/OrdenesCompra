@@ -186,27 +186,27 @@ export class SPServicio {
     } 
     
     ObtenerEmpresasAraujo(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
         return respuesta;
     }
 
     ObtenerConsecutivos() {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
         return respuesta;
     }
 
     async ObtenerConsecutivoAsociado(): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
         return respuesta;
     }
 
     async ObtenerConsecutivoConsultores(): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
         return respuesta;
     }
 
     async GuardarConsecutivo(idRegistroConfig, ObjConsecutivo): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.getById(idRegistroConfig).update(ObjConsecutivo);
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.getById(idRegistroConfig).update(ObjConsecutivo);
         return respuesta;
     }    
 
