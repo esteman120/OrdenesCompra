@@ -430,7 +430,7 @@ export class VerOrdenCompraComponent implements OnInit {
                             '<br>'+
                             '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el jefe</p>'+
                             '<br>'+
-                            '<strong>Motivo de la devolición:</strong>'+
+                            '<strong>Motivo de la devolución:</strong>'+
                             '<p>'+this.motivoDevolucion+'</p>'+
                             '<br>'+
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
@@ -456,7 +456,7 @@ export class VerOrdenCompraComponent implements OnInit {
                             '<br>'+
                             '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el Gerente Administrativo</p>'+
                             '<br>'+
-                            '<strong>Motivo de la devolición:</strong>'+
+                            '<strong>Motivo de la devolución:</strong>'+
                             '<p>'+this.motivoDevolucion+'</p>'+
                             '<br>'+
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
