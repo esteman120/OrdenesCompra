@@ -104,7 +104,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
       JobNumero: [""],
-      DescripcionJob: ["", Validators.required],
+      DescripcionJob: [""],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
       CECO: [""],
@@ -112,7 +112,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       PorcentajeAsumidoCECO: [""],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
-      RubroPresupuesto: ["", Validators.required],
+      RubroPresupuesto: [""],
       JustificacionGasto: ["", Validators.required],
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
@@ -202,7 +202,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.servicio.ObtenerConfiguracionApp().then(
        (res)=>{
          this.PorcentajeIva = res[0].ValorIva; 
-         this.IdRegConfiguracionApp = res[0].Id;
+         this.IdRegConfiguracionApp = res[0].Id; 
          this.PorcentajeIvaUtilizar = this.PorcentajeIva;
          let ConsecutivoConsultores = res[0].ConsecutivoConsultores;
          ConsecutivoConsultores = ConsecutivoConsultores.split("-");
@@ -289,7 +289,6 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.Reembolso = true;
     } else {
       this.Reembolso = false;
-      this.participacion = [];
     }
   }
 
@@ -303,9 +302,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let NombreCECO = this.generarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.generarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.generarOrdenForm.controls["NumeroJobCECO"].value;
-    let PorcentajeAsumidoCECO = this.generarOrdenForm.controls[
-      "PorcentajeAsumidoCECO"
-    ].value;
+    let PorcentajeAsumidoCECO = this.generarOrdenForm.controls["PorcentajeAsumidoCECO"].value;
 
     if (PorcentajeAsumidoCECO > 100) {
       this.mostrarAdvertencia("El porcentaje asumido no puede ser superior al 100%");
@@ -315,30 +312,44 @@ export class GenerarOrdenCompraComponent implements OnInit {
 
     if (NombreCECO === "") {
       this.validarNombreCECO = true;
+      this.spinnerService.hide(); 
       return false;
     }
     if (CECO === "") {
       this.validarCECO = true;
+      this.spinnerService.hide();
       return false;
     }
-    if (NumeroJobCECO === "") {
-      this.validarNJOB = true;
-      return false;
-    }
+    // if (NumeroJobCECO === "") {
+    //   this.validarNJOB = true;
+    //   return false;
+    // }
     if (PorcentajeAsumidoCECO === "") {
       this.validarPorcentajeCECO = true;
+      this.spinnerService.hide(); 
       return false;
     }
 
-    NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO)
-      .nombre;
+    // NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === NombreCECO);
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    });
+    let sumaTotal = sumaParticipacion + PorcentajeAsumidoCECO;
+    if (sumaTotal > 100) {
+      this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
+      this.spinnerService.hide();; 
+      return false;
+    }
 
     let objParticipacion = {
       id: Math.floor(Math.random() * 11),
       ceco: CECO,
-      nombre: NombreCECO,
+      nombre: ObjCeco.nombre,
       Njob: NumeroJobCECO,
-      asumido: PorcentajeAsumidoCECO
+      asumido: PorcentajeAsumidoCECO,
+      directorId: ObjCeco.DirectorCeco
     };
     this.participacion.push(objParticipacion);
 
@@ -540,14 +551,23 @@ export class GenerarOrdenCompraComponent implements OnInit {
       
       this.mostrarAdvertencia("Faltan campos por diligenciar");   
       return false;
-    }
+    }    
 
-    if (this.Reembolso === false) {
-      if (this.participacion.length === 0) {
-        this.spinnerService.hide(); 
-        this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
-        return false;
-      }        
+    if (this.participacion.length === 0) {
+      this.spinnerService.hide(); 
+      this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
+      return false;
+    } 
+
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    }); 
+
+    if (sumaParticipacion < 100) {
+      this.mostrarAdvertencia("El total del procentaje asumido debe ser igual al 100%");
+      this.spinnerService.hide();
+      return false;
     }
 
     if (this.ItemsGuardar.length === 0) {
@@ -568,6 +588,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let FechaSolicitud = this.generarOrdenForm.controls["FechaSolicitud"].value;
     FechaSolicitud = this.AsignarFormatoFecha(FechaSolicitud); 
     let TiempoEntrega = this.generarOrdenForm.controls["TiempoEntrega"].value;
+    TiempoEntrega = this.AsignarFormatoFecha(TiempoEntrega);
     let RubroPresupuesto = this.generarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.generarOrdenForm.controls["JustificacionGasto"].value;
     let coniva = this.TieneIva;

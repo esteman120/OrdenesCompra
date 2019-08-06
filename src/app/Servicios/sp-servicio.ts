@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MzkxMzE3MCwibmJmIjoxNTYzOTEzMTcwLCJleHAiOjE1NjM5NDIyNzAsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.i9lpSqNbjqNyOeKaNFTfbKZgicav8oc32MEj2XEjZroe6GsbDoA8kzpl6sPcLvwj7Gm5d5XO-EYOvwSO1FnPgq7EY9K91dOjAKrgslOCoKsJjAKS0PmKBZrt2cRviLg-RlCG9Smy3UlvGlorNLpqohAU0pTARxb3kjWmVfpYrHruNNFs3l74B8i1cEo04M7DtDOf7ZNq8RzENOZVcXjQltS5veti-KC3h_AWxv4Aeduydl8ZK9DGOvus_VCe1U6W1qziyIOvoEKkpayClYo_XK9BzN-6QqhiDDkHHRXML1NMIEan0cXFQAuR6Vbnt3__dFTDJ4ih6PDUEyaU_iyJyA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTEwODkxOSwibmJmIjoxNTY1MTA4OTE5LCJleHAiOjE1NjUxMzgwMTksImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.StDydjyZ7U8U8J3B5VyRPP-mIyCnL-ryhcPuOMGUa-ZIkZ-jzNRIDjaf0cwdeg_WIDxDP4FSxkWUMcPZqoZv3TuyS9UWB59G1PWrjRc2BGhqCOnXGBHCfpUkeJOW6qGDvh9AY_3k2T7dM-SfnFjDGH63O1cIBOux5N4UoPu7jGRgdNh0x5OdPRi-KbTYXpECDBT4CL_kqy5tTa-_2AdfYUo-CxrOHfqAxNijLfXt7ynGUsbydxhmGXfNmbQARDVW_sIFPW7G2NopjntUauYFDtXf_jqtSNbalsYIuA18rP6_EiPiDpGggYdmBDDiiQvMj2vBpBAVCOUqdyfejE6fjA'
             }
         }, environment.urlWeb);
 
@@ -45,7 +45,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MzkxMzE3MiwibmJmIjoxNTYzOTEzMTcyLCJleHAiOjE1NjM5NDIyNzIsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.lfN_D0xAWvfQCkWoARuNBOQr46IvUC-eAujLnDyHZOGbV6t9Z0YxtLUvOM0KmasXRL8cI5XQnnKAPd_NHSzemh1Dha4gK56NRWibr7Eyn2DKK5XBcx8KJshDqQB2JdPI3d-jTVrxtsxuBy726qVFR_moL2QhKUE66eXKyxtflsARFKfijx_RdLLuKLvgUO64MSOHGxkcLD7UD2jNWu81fuCafMszt3fAxOfoCXLSyHqX1TnaI8SlsPAUQ4kzHFwhApBuWopR7wNOHZ8COTEhz5yqRsm0OMyt68rQXg73UHUnlAo9SsBSyFOF2VH6WyQdIQt7tH2RqLYjhYJNYzxx3A' 
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTEwODkxOCwibmJmIjoxNTY1MTA4OTE4LCJleHAiOjE1NjUxMzgwMTgsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.a7uwVrEWWStXV26DLksmj07F_fcwaGQKELVjOa0dwfhLhIVb9ROHWLhYMx4lg5bVL6RT_0a8ltQCH9JP3Rb8FNUUGPomWLCNVSU5BbJYuBVvMU16Y6Bzt6N7oxMlXWZ5SSsqgLrQ6GnTno3J6XHUisoXlMbfMEo0NrqwW3TpOQb-kbF6ebLemU-VSA9ky73TowxhN93eGGJU-y9_CyT9GdxVlorsafJ7pTWBbfypqmhx4ZV6PO59DyBFsffuAjD_tDiCg_DCpJUDrYOTmFVs2Cik4OoG-RPCzc3GRIub5KRJ9xfvZ4RV_daK8u7oavTf15aJhDrlQEn3JZYJVBoVvQ' 
             }
         }, environment.urlWebGH);
 
@@ -79,8 +79,9 @@ export class SPServicio {
                 Nombre: ObjParticipacion.nombre,
                 NumeroJob: ObjParticipacion.Njob,
                 PorcentajeAsumido: ObjParticipacion.asumido,
-                OrdenCompraId: idOrden,            
-              }
+                OrdenCompraId: idOrden, 
+                DirectorCecoId: ObjParticipacion.directorId           
+            }
         )
         return respuesta;
     }
@@ -145,18 +146,18 @@ export class SPServicio {
         return respuesta;
     }
 
-    obtenerFirmas(idUsuario){
-        let respuesta = this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
+    async obtenerFirmas(idUsuario): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
         return respuesta;
     }
 
     ValidarUsuarioGerente() {
-        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll(); 
         return respuesta;
     } 
 
     obtenerParticipacion(idOrden){
-        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").select("*", "DirectorCeco/EMail").expand("DirectorCeco").get();
         return respuesta;
     }
 
@@ -208,6 +209,21 @@ export class SPServicio {
     async GuardarConsecutivo(idRegistroConfig, ObjConsecutivo): Promise<any>{
         let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.getById(idRegistroConfig).update(ObjConsecutivo);
         return respuesta;
-    }    
+    } 
+    
+    async ActualizarAprobacionParticipacion(id, Aprobado: boolean): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(id).update({
+            Aprobado: Aprobado
+        });
+        return respuesta;
+    }
+
+    ModificarParticipacion(id, Porcentaje, NJob){
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(id).update({
+            PorcentajeAsumido: Porcentaje,
+            NumeroJob: NJob
+        });
+        return respuesta;
+    }
 
 }
