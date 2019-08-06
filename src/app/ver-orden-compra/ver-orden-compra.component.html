@@ -116,7 +116,7 @@
                                 </mat-error>
                             </div>
                         </div>
-                        <div *ngIf="Reembolso">
+                        <div>
                             <br>
                             <div class="row">
                                 <table class="table table-bordered">
@@ -168,7 +168,9 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
-                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega" readonly>
+                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega" readonly disabled>
+                                <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
                             </mat-form-field>
                             <mat-error>
                                 <span *ngIf="!VerOrdenForm.get('TiempoEntrega').valid && VerOrdenForm.get('TiempoEntrega').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
@@ -274,27 +276,43 @@
                 <button type="button" class="btn btn-danger" (click)="RechazarOrden(templateItems)">Rechazar Orden</button>
             </div>
         </div>
+        <div class="row" *ngIf="CodigoEstado === 11">
+            <div class="col-4  offset-4">
+                <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="RecibirOC()">Recibir OC</button>
+            </div>
+        </div>
+        <div class="row" *ngIf="CodigoEstado === 12">
+            <div class="col-4  offset-4">
+                <button type="button" style="margin-right: 30px" class="btn btn-success" (click)="PagarFac()">Factura Pagada</button>
+            </div>
+        </div>
         <br>
         <div style="background:#f2f2f2;">
             <div style="padding-top:20px; padding:15px; text-align:center;">
                 <table width="98%">
                     <tr>
-                        <td width="33.3%">
+                        <td width="25%">
                             <span class="background" id="table-compra">Solicitante </span><br><br>
-                            <img src="{{firmaUsuario}}" width="50%" alt="" *ngIf="CodigoEstado === 2 || CodigoEstado === 3 || CodigoEstado === 4"><br>
+                            <img src="{{firmaUsuario}}" width="50%" alt="" *ngIf="CodigoEstado === 2 || CodigoEstado === 3 || CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
                             <span>{{nombreUsuario}}</span><br>
                         </td>
-                        <td width="33.3%">
+                        <td width="25%">
                             <span class="background" id="table-compra">Gerente de unidad de negocio </span><br><br>
-                            <img src="{{firmaJefe}}" width="50%" alt="" *ngIf="CodigoEstado === 3 || CodigoEstado === 4"><br>
+                            <img src="{{firmaJefe}}" width="50%" alt="" *ngIf="CodigoEstado === 3 || CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
                             <span>{{nombreJefe}}</span><br>
                         </td>
-                        <td width="33.3%">
+                        <td width="25%">
                             <span class="background" id="table-compra">Gerente Administrativo y Financiero</span><br><br>
-                            <img src="{{firmaGerente}}" width="50%" alt="" *ngIf="CodigoEstado === 4"><br>
+                            <img src="{{firmaGerente}}" width="50%" alt="" *ngIf="CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
                             <span>{{nombreGerente}}</span><br>
                         </td>
+                        <td width="25%">
+                            <span class="background" id="table-compra">Director operativo</span><br><br>
+                            <img src="{{firmaDO}}" width="50%" alt="" *ngIf="CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
+                            <span>{{nombreDO}}</span><br>
+                        </td>
                     </tr>
+
                 </table>
             </div>
             <hr>
@@ -306,7 +324,14 @@
             </div> -->
         </div>
         <br>
+        <div style="background:#f2f2f2;">
+            <div style="padding-top:20px; padding:15px; text-align:center;">
+                <table width="98%" [innerHTML]="FirmasCECOS">
 
+                </table>
+            </div>
+            <hr>
+        </div>
     </div>
 </form>
 <ng-template #templateItems>

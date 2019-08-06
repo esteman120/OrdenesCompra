@@ -128,7 +128,7 @@
                                 </mat-error>
                             </div>
                         </div>
-                        <div *ngIf="Reembolso">
+                        <div>
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -237,8 +237,13 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
-                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                                <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
                             </mat-form-field>
+                            <!-- <mat-form-field style="width: 100%">
+                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                            </mat-form-field> -->
                             <mat-error>
                                 <span *ngIf="!generarOrdenForm.get('TiempoEntrega').valid && generarOrdenForm.get('TiempoEntrega').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                             </mat-error>
