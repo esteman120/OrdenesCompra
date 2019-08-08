@@ -182,9 +182,9 @@ export class EditarOrdenesComponent implements OnInit {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
         }
         else{
-          this.editarOrdenForm.controls["Reembolsable"].setValue("false");
-          this.obtenerParticipacion();
-        }        
+          this.editarOrdenForm.controls["Reembolsable"].setValue("false");          
+        }
+        this.obtenerParticipacion();        
         this.Reembolso = this.ObjOrdenCompra.Reembolsable;
         this.editarOrdenForm.controls["NombreCECO"].setValue(this.ObjOrdenCompra.NombreCECO);
         this.editarOrdenForm.controls["CECO"].setValue(this.ObjOrdenCompra.CECO);
@@ -666,6 +666,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   private AsignarFormatoFecha(FechaActividad: Date) {
+    FechaActividad = new Date(FechaActividad);
     let diaActividadExtraordinaria = FechaActividad.getDate();
     let mesActividadExtraordinaria = FechaActividad.getMonth();
     let anoActividadExtraordinaria = FechaActividad.getFullYear();
@@ -674,7 +675,7 @@ export class EditarOrdenesComponent implements OnInit {
     let minutos = FechaActividad.getMinutes() === 0 ? 1 : FechaActividad.getMinutes();
     let segundos = FechaActividad.getSeconds() === 0 ? 1 : FechaActividad.getSeconds();
     let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, horas, minutos, segundos).toISOString();
-    return fechaRetornar;
+    return fechaRetornar; 
   }
 
   async onSubmit() {

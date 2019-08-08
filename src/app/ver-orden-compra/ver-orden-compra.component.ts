@@ -580,9 +580,9 @@ export class VerOrdenCompraComponent implements OnInit {
   }
   
   async MetodoAprobacionCECO(): Promise<any> {
-    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
-      if (ObjCeco.length > 1) {
-        let IdParticipacion = ObjCeco[0].id;
+    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false && x.idDirectorCECO !== this.usuarioActual.id);
+      if (ObjCeco.length > 0) {
+        // let IdParticipacion = ObjCeco[0].id;
         let NombreCeco = ObjCeco[0].nombre;
         let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
         let EmailDirector = ObjCeco[0].EmailDirector;
@@ -604,6 +604,8 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [EmailDirector]
         }
+        let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+        let IdParticipacion = ObjCeco2[0].id;
         let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);
       }
@@ -627,13 +629,14 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [this.emailGerente]
         } 
-        let IdParticipacion = ObjCeco[0].id;
+        let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+        let IdParticipacion = ObjCeco2[0].id;
         let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);       
       } 
   }
 
-  MetodoAprovacionJefe(): any {
+  async MetodoAprovacionJefe(): Promise<any> {
     let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
       if (ObjCeco.length > 0) {
         let IdParticipacion = ObjCeco[0].id;
@@ -658,7 +661,7 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [EmailDirector]
         }
-       
+        // let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);
       }
   }
@@ -729,7 +732,7 @@ export class VerOrdenCompraComponent implements OnInit {
     }
   }
 
-  MetodoRechazoDO(): any {
+  async MetodoRechazoDO(): Promise<any> {
     this.EstadoSiguiente = "Devuelta por el director operativo";
       this.ResponsableSiguiente = this.idUsuario;
         let objAprobar ={
@@ -751,10 +754,16 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [this.emailUsuario, this.emailJefe]
         }
+
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
         this.modificarOrden(objAprobar, ObjCorreo); 
   }
 
-  MetodoRechazoCeco(): any {
+  async MetodoRechazoCeco(): Promise<any> {
     let ObjCeco = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
     this.EstadoSiguiente = "Devuelta por el Ceco "+ ObjCeco[0].nombre;
       this.ResponsableSiguiente = this.idUsuario;
@@ -777,10 +786,15 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [this.emailUsuario, this.emailJefe]
         }
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
         this.modificarOrden(objAprobar, ObjCorreo); 
   }
 
-  MetodoRechazoGerente(): any {
+  async MetodoRechazoGerente(): Promise<any> {
     this.EstadoSiguiente = "Devuelta por el gerente";
       this.ResponsableSiguiente = this.idUsuario;
         let objAprobar ={
@@ -802,10 +816,16 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [this.emailUsuario, this.emailJefe]
         }
+
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
         this.modificarOrden(objAprobar, ObjCorreo); 
   }
 
-  MetodoRechazoJefe(): any {
+  async MetodoRechazoJefe(): Promise<any> {
     this.EstadoSiguiente = "Devuelta por el jefe";
       this.ResponsableSiguiente = this.idUsuario;
         let objAprobar = {
@@ -829,6 +849,11 @@ export class VerOrdenCompraComponent implements OnInit {
           aQuien: [this.emailUsuario]
         }
         
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
         this.modificarOrden(objAprobar, ObjCorreo);
         // this.modificarOrden(objAprobar); 
   }
