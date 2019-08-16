@@ -373,7 +373,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.validarElementoServicio = false;
     this.validarEspecificaciones = false;
     let ValorTotal = 0;
-    this.Total = 0;
+    let calcularValorConIVa;
 
     if (this.item === "") {
       this.validarItem = true;
@@ -399,6 +399,17 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.validarEspecificaciones = true;
       return false;
     }
+
+    // if (this.TieneIva === true) {
+    //   let iva = this.PorcentajeIva / 100
+    //   calcularValorConIVa = (this.ValorUnitario * this.Cantidad) * iva;
+    //   ValorTotal = (this.ValorUnitario * this.Cantidad) + calcularValorConIVa;
+    //   this.Total = ValorTotal
+    // }
+    // else {
+    //   ValorTotal = this.ValorUnitario * this.Cantidad;
+    //   this.Total = ValorTotal
+    // }
 
     ValorTotal = this.ValorUnitario * this.Cantidad;
 
@@ -439,7 +450,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   calcularIva() {
     this.Subtotal = 0;
     this.ItemsGuardar.map(x=>{
-      this.Subtotal = this.Subtotal + x.ValorTotal;
+      this.Subtotal = this.Subtotal + x.ValorTotal
     });
   
     this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
