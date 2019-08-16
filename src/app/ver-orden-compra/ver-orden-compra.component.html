@@ -1,3 +1,4 @@
+<ng-container *ngIf="CodigoEstado !== 11 && CodigoEstado !== 12">
 <form autocomplete="off" [formGroup]="VerOrdenForm">
     <div class="container">
         <mat-accordion>
@@ -126,7 +127,7 @@
                                             <th scope="col" class="cabezeraTblUnidadNegocio">NOMBRE</th>
                                             <th scope="col" class="cabezeraTblUnidadNegocio">N.JOB</th>
                                             <th scope="col" class="cabezeraTblUnidadNegocio">% ASUMIDO</th>
-                                            <!-- <th scope="col" class="cabezeraTblUnidadNegocio">ELIMINAR</th> -->
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -135,9 +136,7 @@
                                             <td>{{item.nombre}}</td>
                                             <td>{{item.Njob}}</td>
                                             <td>{{item.asumido}}</td>
-                                            <!-- <td>
-                                                <button class="btnBorrar" (click)="eliminarParticipacion(item.id)"><i class="fa fa-close"></i></button>
-                                            </td> -->
+                                            
                                         </tr>
                                     </tbody>
                                 </table>
@@ -231,7 +230,7 @@
                                     <th scope="col" class="cabezeraTblUnidadNegocio">Cantidad</th>
                                     <th scope="col" class="cabezeraTblUnidadNegocio">Valor Unitario</th>
                                     <th scope="col" class="cabezeraTblUnidadNegocio">Valor total</th>
-                                    <!-- <th scope="col" class="cabezeraTblUnidadNegocio">Borrar</th> -->
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -242,9 +241,8 @@
                                     <td>{{item.Cantidad}}</td>
                                     <td>{{item.ValorUnitario | number:'.2'}}</td>
                                     <td>{{item.ValorTotal | number:'.2'}}</td>
-                                    <!-- <td>
-                                        <button class="btnBorrar" (click)="eliminarItem(item.numeroId)"><i class="fa fa-close"></i></button>
-                                    </td> -->
+                                   
+                                    
                                 </tr>
                             </tbody>
                         </table>
@@ -316,12 +314,7 @@
                 </table>
             </div>
             <hr>
-            <!-- <div style="text-align:center; padding:15px;">
-                <span class="background" id="table-compra">Gerente Administrativo y Financiero</span><br><br>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Firma_Soledad_Pastorutti.png" width="15%%" alt=""><br>
-                <span>DIEGO VILLANUEVA /</span><br>
-                <span>Firma de quien Aprueba</span>
-            </div> -->
+          
         </div>
         <br>
         <div style="background:#f2f2f2;">
@@ -360,4 +353,362 @@
     </div>
 
 </ng-template>
+</ng-container>
+
+<!--Vista para auxiliar contable-->
+
+<ng-container *ngIf="CodigoEstado === 11 || CodigoEstado === 12">
+<form autocomplete="off" [formGroup]="VerOrdenForm" id="fromatoExportar">
+    <div class="container">
+        <mat-card>
+            <h6 class="text-center">Información de la orden</h6>
+            <div class="row">
+                <div class="col-md-2 offset-md-10 text-center">
+                    <label for="Nro de orden">Nro de orden</label>
+                    <input matInput formControlName="nroOrden"  readonly id="nroOrden"  class="text-center">
+                </div>
+                <ng-container *ngIf="CodigoEstado === 11">
+                    <div class="col-md-3">
+                        <button type="button" style="margin-right: 30px" class="btn btn-success btn-block"
+                            (click)="RecibirOC()">Recibir</button>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="CodigoEstado === 12">
+                    <div class="col-md-3">
+                        <button type="button" style="margin-right: 30px" class="btn btn-success btn-block"
+                            (click)="PagarFac()">Pagar</button>
+                    </div>
+                </ng-container>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Empresa solicitante" formControlName="EmpresaSolicitante" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Entidad / Compañia" formControlName="EntidadCompania" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('EntidadCompania').valid && VerOrdenForm.get('EntidadCompania').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Persona de Contacto" formControlName="PersonaContacto" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('PersonaContacto').valid && VerOrdenForm.get('PersonaContacto').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Teléfono" formControlName="TelefonoContacto" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('TelefonoContacto').valid && VerOrdenForm.get('TelefonoContacto').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Email contacto" formControlName="EmailContacto" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('EmailContacto').valid && VerOrdenForm.get('EmailContacto').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Ciudad" formControlName="Ciudad" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span *ngIf="!VerOrdenForm.get('Ciudad').valid && VerOrdenForm.get('Ciudad').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Páginas enviadas" formControlName="Paginas" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span *ngIf="!VerOrdenForm.get('Paginas').valid && VerOrdenForm.get('Paginas').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+        </mat-card>
+        <br>
+        <mat-card>
+            <div class="row">
+                <div class="col-md-5">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="JOB N°" formControlName="JobNumero" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('JobNumero').valid && VerOrdenForm.get('JobNumero').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Descripción del JOB</label>
+                        <textarea class="form-control" rows="3" formControlName="DescripcionJob" readonly></textarea>
+                        <mat-error>
+                            <span
+                                *ngIf="!VerOrdenForm.get('DescripcionJob').valid && VerOrdenForm.get('DescripcionJob').touched"><small
+                                    class="form-text">Este campo debe estar diligenciado</small></span>
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <br>
+        <mat-card>
+            <!-- <div class=" row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Reembolsable</label>
+                            <div class="col-sm-10">
+                                <mat-radio-group aria-label="Select an option" formControlName="Reembolsable" (change)="radioChange($event)" disabled>
+                                    <mat-radio-button value="true" style="margin-right: 14px;">SI</mat-radio-button>
+                                    <mat-radio-button value="false">NO</mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error>
+                                    <span *ngIf="!VerOrdenForm.get('Reembolsable').valid && VerOrdenForm.get('Reembolsable').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
+                                </mat-error>
+                            </div>
+                        </div> -->
+            <div>
+                <br>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="cabezeraTblUnidadNegocio">CECO</th>
+                                <th scope="col" class="cabezeraTblUnidadNegocio">NOMBRE</th>
+                                <th scope="col" class="cabezeraTblUnidadNegocio">N.JOB</th>
+                                <th scope="col" class="cabezeraTblUnidadNegocio">% ASUMIDO</th>
+                                <!-- <th scope="col" class="cabezeraTblUnidadNegocio">ELIMINAR</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of participacion">
+                                <th scope="row">{{item.ceco}}</th>
+                                <td>{{item.nombre}}</td>
+                                <td>{{item.Njob}}</td>
+                                <td>{{item.asumido}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+        <br>
+        <mat-card>
+            <h6 class="text-center">Agregar elementos</h6>
+            <div class="row">
+                <div class="col-xs-12 col-12 col-md-4 form-group">
+                    <mat-form-field style="width: 100%">
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha de solicitud"
+                            formControlName="FechaSolicitud" readonly disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('FechaSolicitud').valid && VerOrdenForm.get('FechaSolicitud').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%">
+                        <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega"
+                            formControlName="TiempoEntrega" readonly disabled>
+                        <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('TiempoEntrega').valid && VerOrdenForm.get('TiempoEntrega').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="Rubro de presupuesto" formControlName="RubroPresupuesto" readonly>
+                    </mat-form-field>
+                    <mat-error>
+                        <span
+                            *ngIf="!VerOrdenForm.get('RubroPresupuesto').valid && VerOrdenForm.get('RubroPresupuesto').touched"><small
+                                class="form-text">Este campo debe estar diligenciado</small></span>
+                    </mat-error>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Justificación del gasto</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                            formControlName="JustificacionGasto" readonly></textarea>
+                        <mat-error>
+                            <span
+                                *ngIf="!VerOrdenForm.get('JustificacionGasto').valid && VerOrdenForm.get('JustificacionGasto').touched"><small
+                                    class="form-text">Este campo debe estar diligenciado</small></span>
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <br>
+        <mat-card>
+            <!-- <div class="row">
+                        <div class="col-md-12">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">¿Desea agregar Iva a la Orden de compra?</label>
+                            <mat-radio-group aria-label="Select an option" formControlName="IvaSiNo" disabled>
+                                <mat-radio-button value="si" style="margin-right: 14px;">SI</mat-radio-button>
+                                <mat-radio-button value="no">NO</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <br>
+                    <hr> -->
+            <div class="row">
+                <div class="col-md-3">
+                    <mat-form-field style="width: 100%">
+                        <mat-label>Tipo de moneda</mat-label>
+                        <mat-select formControlName="TipoMoneda" disabled>
+                            <mat-option value="COP">COP</mat-option>
+                            <mat-option value="USD">USD</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">ITEM</th>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">ELEMENTO O SERVICIO</th>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">ESPECIFICACIONES</th>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">Cantidad</th>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">Valor Unitario</th>
+                            <th scope="col" class="cabezeraTblUnidadNegocio">Valor total</th>
+                            <!-- <th scope="col" class="cabezeraTblUnidadNegocio">Borrar</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of ItemsGuardar">
+                            <td>{{item.Title}}</td>
+                            <td>{{item.Elemento}}</td>
+                            <td>{{item.Especificaciones}}</td>
+                            <td>{{item.Cantidad}}</td>
+                            <td>{{item.ValorUnitario | number:'.2'}}</td>
+                            <td>{{item.ValorTotal | number:'.2'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr style="height: 3px;border: solid 1px #fff;background: #0e144e;">
+            <div style="text-align: -webkit-right;">
+                <table style="width: 40%;max-width: 100%; background:#0e144e;">
+                    <tr>
+                        <td style="text-align:right; color: #ffffff;" width="25%">Subtotal:</td>
+                        <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">
+                            ${{Subtotal | number:'.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right; color: #ffffff;" width="25%">IVA({{PorcentajeIvaUtilizar}}%):</td>
+                        <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">
+                            {{Iva | number:'.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right; color: #ffffff; font-weight: bold;" width="25%">TOTAL:</td>
+                        <td style="text-align:right; color: #ffffff; padding-right: 25px;" width="15%">
+                            ${{Total | number:'.2-2'}}</td>
+                    </tr>
+                </table>
+            </div>
+        </mat-card>
+        <br>
+        <div class="row" *ngIf="SoloLectura">
+            <div class="col-4  offset-4">
+                <button type="button" style="margin-right: 30px" class="btn btn-success"
+                    (click)="AprobarOrden()">Aprobar Orden</button>
+                <button type="button" class="btn btn-danger" (click)="RechazarOrden(templateItems)">Rechazar
+                    Orden</button>
+            </div>
+        </div>
+        <br>
+        <div style="background:#f2f2f2;">
+            <div style="padding-top:20px; padding:15px; text-align:center;">
+                <table width="98%">
+                    <tr>
+                        <td width="25%">
+                            <span class="background" id="table-compra">Solicitante </span><br><br>
+                            <img src="{{firmaUsuario}}" width="50%" alt=""
+                                *ngIf="CodigoEstado === 2 || CodigoEstado === 3 || CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
+                            <span>{{nombreUsuario}}</span><br>
+                        </td>
+                        <td width="25%">
+                            <span class="background" id="table-compra">Gerente de unidad de negocio </span><br><br>
+                            <img src="{{firmaJefe}}" width="50%" alt=""
+                                *ngIf="CodigoEstado === 3 || CodigoEstado === 4 || CodigoEstado === 7 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
+                            <span>{{nombreJefe}}</span><br>
+                        </td>
+                        <td width="25%">
+                            <span class="background" id="table-compra">Gerente Administrativo y
+                                Financiero</span><br><br>
+                            <img src="{{firmaGerente}}" width="50%" alt=""
+                                *ngIf="CodigoEstado === 4 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
+                            <span>{{nombreGerente}}</span><br>
+                        </td>
+                        <td width="25%">
+                            <span class="background" id="table-compra">Director operativo</span><br><br>
+                            <img src="{{firmaDO}}" width="50%" alt=""
+                                *ngIf="CodigoEstado === 4 || CodigoEstado === 9 || CodigoEstado >= 11"><br>
+                            <span>{{nombreDO}}</span><br>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <hr>
+            <!-- <div style="text-align:center; padding:15px;">
+                <span class="background" id="table-compra">Gerente Administrativo y Financiero</span><br><br>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Firma_Soledad_Pastorutti.png" width="15%%" alt=""><br>
+                <span>DIEGO VILLANUEVA /</span><br>
+                <span>Firma de quien Aprueba</span>
+            </div> -->
+        </div>
+        <div style="background:#f2f2f2;">
+            <div style="padding-top:20px; padding:15px; text-align:center;">
+                <table width="98%" [innerHTML]="FirmasCECOS">
+
+                </table>
+            </div>
+            <hr>
+        </div>
+    </div>
+</form>
+<ng-container>
+    <div class="col-md-4 offset-4">
+        <button type="button" style="margin-right: 70px" class="btn btn-primary btn-block" (click)="exportarPdf()">Exportar a pdf</button>
+    </div>
+</ng-container>
+</ng-container>
 <ng4-loading-spinner>...Procesando</ng4-loading-spinner>

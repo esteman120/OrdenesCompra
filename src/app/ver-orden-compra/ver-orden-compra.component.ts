@@ -13,6 +13,9 @@ import { Participacion } from '../Entidades/participacion';
 import { itemsOrden } from '../Entidades/itemsOrden';
 import { EmailProperties } from '@pnp/sp';
 import * as CryptoJS from 'crypto-js';
+import domtoimage from 'dom-to-image';
+import * as jsPDF from 'jspdf';
+
 
 @Component({
   selector: 'app-ver-orden-compra',
@@ -87,6 +90,7 @@ export class VerOrdenCompraComponent implements OnInit {
   emailAuxContable: any;
   idAuxContable: any;
   firmaAuxContable: any;
+  Order: string;
 
   constructor(
     private servicio: SPServicio,
@@ -235,6 +239,8 @@ export class VerOrdenCompraComponent implements OnInit {
         this.VerOrdenForm.controls["EmpresaSolicitante"].setValue(this.ObjOrdenCompra.EmpresaSolicitante);
         this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
+        this.Order = this.ObjOrdenCompra.Consecutivo;
+        console.log(this.Order);
         if (this.CodigoEstado === 2 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
           this.SoloLectura = true;
         } 
@@ -341,7 +347,8 @@ export class VerOrdenCompraComponent implements OnInit {
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
             this.ItemsGuardar.map(x=>{
-              this.Total = this.Total + x.ValorTotal;
+              let sumarIva =  x.ValorTotal * (this.PorcentajeIvaUtilizar/100)
+              this.Total = x.ValorTotal + sumarIva;
           });
       
           this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
@@ -942,6 +949,37 @@ export class VerOrdenCompraComponent implements OnInit {
         }, 3000);
       }
     );
+  }
+  
+  exportarPdf() {
+    var node = document.getElementById('fromatoExportar');
+    var img;
+    var filename;
+    var newImage;
+    domtoimage.toJpeg(node, { bgcolor: '#fff', quality: 1 }).then(function (dataUrl) {
+      img = new Image();
+      img.src = dataUrl;
+      newImage = img.src;
+      img.onload = function () {
+        var pdfWidth = img.width;
+        var pdfHeight = img.height;
+        // FileSaver.saveAs(dataUrl, 'my-pdfimage.png'); // Save as Image
+        var doc;
+        if (pdfWidth > pdfHeight) {
+          doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
+        }
+        else {
+          doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
+        }
+        var width = doc.internal.pageSize.getWidth();
+        var height = doc.internal.pageSize.getHeight();
+        doc.addImage(newImage, 'PNG', 10, 10, width, height);
+        filename = 'Orden de compra Nro '+ this.Order +'_.pdf';
+        doc.save(filename);
+      };
+    })
+      .catch(function (error) {
+      });
   }
 
 
