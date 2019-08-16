@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTIzMTExOSwibmJmIjoxNTY1MjMxMTE5LCJleHAiOjE1NjUyNjAyMTksImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.hDEfDOGxNTmVFtJSwYhp7PkGx01Jh75wrmlo3d5Hkiz9d05ECYZbvx07_A3v-49MC5BQcp3AN254Qiqx1CBITrML_tufQ83gc57kXgepp1VDARELZUd_6uK0kLBa5MXydTiS102KfAtpEKKlzvyu0XgxRQDP-I_1fGbzsVFXk6-0EJez1nDxvvbVZub9OzfLEvOpF-qKaS9NfPv5HCvvZ9bdpNQuykoXWWvk9GZyoUC5hLiWriKFyeeiI6vufM_rarp5BOmJJCQ7D_jGzMt_Y1m1txgJvCtSNDocJ0BQUw1IZw5lnc1OY-G0MEdhn1B4RTzWmHzS7NKa7k3M38GqNA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTk1NjQ0MywibmJmIjoxNTY1OTU2NDQzLCJleHAiOjE1NjU5ODU1NDMsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.6hxHCTLJH8SsJISUwwUyLM1GygOyl38b4XBvFv5Zf_Z12p4nonl7u5WKJvBSAO1frJGK3GWPnzppjqIK4-PzQlpg_mJhkeMg8GDsRdBydLzRPu4g4ay_ls7LnisbouBk_nj3ZzLO57ooUD2Q_3ef2MNyRo3l-uD1xV33zk_mniZksE9cynycJx8WTMie7Pdl8L29MrFqmqFE7E85DEwa8-Z-tHCTmIm6J-G1Pp9AP0a0IXfDsSlGpLWEG2HcyeoEEjdU0ptaJ6yJ_5TqQwm7dGEWL_hLWWGSyBKmqb1TR9U-4OLIlB_VWCCh40HtV5NsDo6TrR9MduVWJUDDNiQWTQ'
             }
         }, environment.urlWeb);
 
@@ -68,7 +68,7 @@ export class SPServicio {
     }
 
     ObtenerCentroCosto(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
         return respuesta;
     }
 
@@ -127,7 +127,7 @@ export class SPServicio {
     }
 
     ObtenerServicio(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Orden de compra'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Orden de compra'").getAll();
         return respuesta;
     }
 
@@ -142,27 +142,27 @@ export class SPServicio {
     }
 
     obtenerOrdenCompra(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
         return respuesta;
     }
 
     async obtenerFirmas(idUsuario): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPostGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
+        let respuesta = await this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
         return respuesta;
     }
 
     ValidarUsuarioGerente() {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll(); 
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll(); 
         return respuesta;
     } 
 
     obtenerParticipacion(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").select("*", "DirectorCeco/EMail").expand("DirectorCeco").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").select("*", "DirectorCeco/EMail").expand("DirectorCeco").get();
         return respuesta;
     }
 
     obtenerItems(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
         return respuesta;
     }
 
@@ -172,37 +172,37 @@ export class SPServicio {
     }
 
     obtenerOrdenesPendientes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
         return respuesta;
     }
 
     obtenerMisOrdenes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").orderBy("Id",true).getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").orderBy("Id",true).getAll();
         return respuesta;
     }
 
     ObtenerConfiguracionApp(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").getAll();
         return respuesta;
     } 
     
     ObtenerEmpresasAraujo(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
         return respuesta;
     }
 
     ObtenerConsecutivos() {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
         return respuesta;
     }
 
     async ObtenerConsecutivoAsociado(): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
         return respuesta;
     }
 
     async ObtenerConsecutivoConsultores(): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
         return respuesta;
     }
 
