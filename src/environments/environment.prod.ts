@@ -10,5 +10,7 @@ export const environment = {
   ListaEmpleados: 'Empleados',
   ListaCentroCostos: 'CentroCostos',
   ListaServicios: 'Servicios',
-  ListaUsuariosAprobadores: 'UsuariosAprobadores'
+  ListaUsuariosAprobadores: 'UsuariosAprobadores',
+  ListaConfiguracionApp: 'ConfiguracionAplicaciones',
+  ListaEmpresasAraujoIbarra: 'EmpresasAraujoIbarra'
 };
