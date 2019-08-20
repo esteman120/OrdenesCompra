@@ -358,10 +358,11 @@
 <!--Vista para auxiliar contable-->
 
 <ng-container *ngIf="CodigoEstado === 11 || CodigoEstado === 12">
+<h6 class="text-center">Información de la orden</h6>
 <form autocomplete="off" [formGroup]="VerOrdenForm" id="fromatoExportar">
     <div class="container">
         <mat-card>
-            <h6 class="text-center">Información de la orden</h6>
+            <div style="background: url('../../assets/images/araujo.png'); width: 250px; height: 50px;"></div>
             <div class="row">
                 <div class="col-md-2 offset-md-10 text-center">
                     <label for="Nro de orden">Nro de orden</label>
