@@ -167,7 +167,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
-        if (this.CodigoEstado === 5 || this.CodigoEstado === 6) {
+        if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
         }
         this.editarOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
