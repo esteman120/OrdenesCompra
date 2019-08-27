@@ -126,7 +126,7 @@ export class MisPendientesComponent implements OnInit {
     
     let idOrden = "U2FsdGVkX182"+id;
     
-    if (CodEstado === 6 || CodEstado === 5) {
+    if (CodEstado === 6 || CodEstado === 5 || CodEstado === 8) {
       this.router.navigateByUrl('/editar-orden?id='+idOrden)
       // this.router.navigate(['/editar-orden?id='+idOrden]);
     }
