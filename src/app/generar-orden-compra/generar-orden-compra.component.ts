@@ -447,6 +447,15 @@ export class GenerarOrdenCompraComponent implements OnInit {
 
   }
 
+  validarFecha() {
+    let fecha1 = this.generarOrdenForm.get('FechaSolicitud').value;
+    let fecha2 = this.generarOrdenForm.get('TiempoEntrega').value;
+    if(fecha1 > fecha2) {
+      this.mostrarAdvertencia('La fecha de solicitud no puede ser posterior a la fecha de entrega')
+      this.generarOrdenForm.controls['TiempoEntrega'].setValue("");
+    }
+  }
+
   calcularIva() {
     this.Subtotal = 0;
     this.ItemsGuardar.map(x=>{

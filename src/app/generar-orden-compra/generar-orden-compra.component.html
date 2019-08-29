@@ -237,7 +237,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
-                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega" (dateChange)="validarFecha()">
                                 <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
                                 <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
                             </mat-form-field>
