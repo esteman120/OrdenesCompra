@@ -227,7 +227,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-12 col-md-4 form-group">
                             <mat-form-field style="width: 100%">
-                                <input matInput [matDatepicker]="picker" placeholder="Fecha de solicitud" formControlName="FechaSolicitud">
+                                <input matInput [matDatepicker]="picker" placeholder="Fecha de solicitud" formControlName="FechaSolicitud" (dateChange)="setMinDate()">
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
@@ -237,7 +237,7 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
-                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega" (dateChange)="validarFecha()">
+                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega" [min]="minDate">
                                 <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
                                 <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
                             </mat-form-field>
