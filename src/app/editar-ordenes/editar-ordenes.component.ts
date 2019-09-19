@@ -75,6 +75,9 @@ export class EditarOrdenesComponent implements OnInit {
   TieneIva: boolean;
   PorcentajeIvaUtilizar: number;
   SoloLectura: boolean;
+  Asumido: number;
+  IdParticipacion: any;
+  NJob: any;
 
   constructor(
     private servicio: SPServicio,
@@ -116,14 +119,16 @@ export class EditarOrdenesComponent implements OnInit {
 
   ngOnInit() {
     this.editarOrdenForm = this.formBuilder.group({
+      nroOrden: [""],
+      EmpresaSolicitante: ["",  Validators.required],
       EntidadCompania: ["", Validators.required],
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
       EmailContacto: ["", [Validators.required]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
-      DescripcionJob: ["", Validators.required],
+      JobNumero: [""],
+      DescripcionJob: [""],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
       CECO: [""],
@@ -131,7 +136,7 @@ export class EditarOrdenesComponent implements OnInit {
       PorcentajeAsumidoCECO: [""],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
-      RubroPresupuesto: ["", Validators.required],
+      RubroPresupuesto: [""],
       JustificacionGasto: ["", Validators.required],
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
@@ -162,7 +167,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
-        if (this.CodigoEstado === 5 || this.CodigoEstado === 6) {
+        if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
         }
         this.editarOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
@@ -177,9 +182,9 @@ export class EditarOrdenesComponent implements OnInit {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
         }
         else{
-          this.editarOrdenForm.controls["Reembolsable"].setValue("false");
-          this.obtenerParticipacion();
-        }        
+          this.editarOrdenForm.controls["Reembolsable"].setValue("false");          
+        }
+        this.obtenerParticipacion();        
         this.Reembolso = this.ObjOrdenCompra.Reembolsable;
         this.editarOrdenForm.controls["NombreCECO"].setValue(this.ObjOrdenCompra.NombreCECO);
         this.editarOrdenForm.controls["CECO"].setValue(this.ObjOrdenCompra.CECO);
@@ -192,6 +197,8 @@ export class EditarOrdenesComponent implements OnInit {
         let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no"; 
         this.editarOrdenForm.controls["IvaSiNo"].setValue(coniva);
         this.editarOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.editarOrdenForm.controls["nroOrden"].setValue(this.ObjOrdenCompra.Consecutivo);
+        this.editarOrdenForm.controls["EmpresaSolicitante"].setValue(this.ObjOrdenCompra.EmpresaSolicitante);
         this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         
         
@@ -346,7 +353,6 @@ export class EditarOrdenesComponent implements OnInit {
       this.Reembolso = true;
     } else {
       this.Reembolso = false;
-      this.participacion = [];
     }
   }
 
@@ -403,16 +409,26 @@ export class EditarOrdenesComponent implements OnInit {
       this.validarCECO = true;
       return false;
     }
-    if (NumeroJobCECO === "") {
-      this.validarNJOB = true;
-      return false;
-    }
+    // if (NumeroJobCECO === "") {
+    //   this.validarNJOB = true;
+    //   return false;
+    // }
     if (PorcentajeAsumidoCECO === "") {
       this.validarPorcentajeCECO = true;
       return false;
     }
 
     NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    });
+    let sumaTotal = sumaParticipacion + PorcentajeAsumidoCECO;
+    if (sumaTotal > 100) {
+      this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
+      this.spinnerService.hide();; 
+      return false;
+    }
 
     let objParticipacion = {  
       id: "",    
@@ -465,6 +481,46 @@ export class EditarOrdenesComponent implements OnInit {
         this.mostrarError("Error al eliminar la participación");
       }
     );    
+  }
+
+  EditarParticipacion(template: TemplateRef<any>, objParticipacion){
+    this.Asumido = objParticipacion.asumido;
+    this.IdParticipacion = objParticipacion.id;
+    this.NJob = objParticipacion.Njob;
+    this.modalRef = this.modalService.show(template, {
+      class: "gray modal-sm"
+    });
+  }
+
+  ModificarParticipacion() {
+    this.spinnerService.show();
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      x.id !== this.IdParticipacion? 
+        sumaParticipacion = sumaParticipacion + x.asumido : 0;
+    });
+    let sumaTotal = sumaParticipacion + this.Asumido;
+    if (sumaTotal > 100) {
+      this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
+      this.spinnerService.hide();
+      return false;
+    }
+    
+    this.servicio.ModificarParticipacion(this.IdParticipacion, this.Asumido, this.NJob).then(
+      (res)=> {
+        let index = this.participacion.findIndex(x=>x.id === this.IdParticipacion);
+        this.participacion[index].asumido = this.Asumido;
+        this.participacion[index].Njob = this.NJob;
+        this.modalRef.hide();
+        this.spinnerService.hide();
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error al actualizar el porcentaje de participación");
+        console.log(error);
+        this.spinnerService.hide();
+    }
+    )
   }
 
   agregarItem(template: TemplateRef<any>) {
@@ -609,6 +665,19 @@ export class EditarOrdenesComponent implements OnInit {
     )    
   }
 
+  private AsignarFormatoFecha(FechaActividad: Date) {
+    FechaActividad = new Date(FechaActividad);
+    let diaActividadExtraordinaria = FechaActividad.getDate();
+    let mesActividadExtraordinaria = FechaActividad.getMonth();
+    let anoActividadExtraordinaria = FechaActividad.getFullYear();
+    let hoy = new Date();
+    let horas = FechaActividad.getHours() === 0 ? hoy.getHours() : FechaActividad.getHours();
+    let minutos = FechaActividad.getMinutes() === 0 ? 1 : FechaActividad.getMinutes();
+    let segundos = FechaActividad.getSeconds() === 0 ? 1 : FechaActividad.getSeconds();
+    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, horas, minutos, segundos).toISOString();
+    return fechaRetornar; 
+  }
+
   async onSubmit() {
     this.spinnerService.show();
 
@@ -619,12 +688,21 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
-    if (this.Reembolso === false) {
-      if (this.participacion.length === 0) {
-        this.spinnerService.hide(); 
-        this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
-        return false;
-      }        
+    if (this.participacion.length === 0) {
+      this.spinnerService.hide(); 
+      this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
+      return false;
+    }
+
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    });
+
+    if (sumaParticipacion !== 100) {
+      this.mostrarAdvertencia("El total del procentaje asumido debe ser el 100%");
+      this.spinnerService.hide();
+      return false;
     }
 
     let EntradaCompania = this.editarOrdenForm.controls["EntidadCompania"].value;
@@ -637,7 +715,9 @@ export class EditarOrdenesComponent implements OnInit {
     let DescripcionJob = this.editarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.editarOrdenForm.controls["FechaSolicitud"].value;
+    FechaSolicitud = this.AsignarFormatoFecha(FechaSolicitud);
     let TiempoEntrega = this.editarOrdenForm.controls["TiempoEntrega"].value;
+    TiempoEntrega = this.AsignarFormatoFecha(TiempoEntrega);
     let RubroPresupuesto = this.editarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.editarOrdenForm.controls["JustificacionGasto"].value;
     let coniva = this.TieneIva;

@@ -17,4 +17,22 @@
     padding: 5px 16px;
     font-size: 16px;
     cursor: pointer;
+    margin-right: 8px;
+}
+
+.btnEditar {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 5px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#nroOrden {
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    background: lightgray;
+    margin-top: 0;
 }

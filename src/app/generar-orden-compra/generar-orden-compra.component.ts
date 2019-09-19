@@ -10,6 +10,7 @@ import { ActivatedRoute, Router} from '@angular/router';
 import { Usuario } from '../Entidades/usuario';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { element } from 'protractor';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-generar-orden-compra",
@@ -48,6 +49,13 @@ export class GenerarOrdenCompraComponent implements OnInit {
   PorcentajeIva: any;
   TieneIva: boolean;
   PorcentajeIvaUtilizar: any;
+  ObjEmpresas: any[];
+  ConsecutivoConsultores: any;
+  ConsecutivoAsociados: any;
+  TipoConsecutivo: any;
+  IdRegConfiguracionApp: any;
+  filteredOptions: Observable<string[]>;
+  minDate: Date;
 
   constructor(
     private servicio: SPServicio,
@@ -88,14 +96,16 @@ export class GenerarOrdenCompraComponent implements OnInit {
   ngOnInit() {    
     this.spinnerService.show();
     this.generarOrdenForm = this.formBuilder.group({
-      EntidadCompania: ["", Validators.required],
+      nroOrden: [""],
+      EmpresaSolicitante: ["",  Validators.required],
+      EntidadCompania: ["", Validators.required],      
       PersonaContacto: ["", Validators.required],
       TelefonoContacto: ["", Validators.required],
       EmailContacto: ["", [Validators.required, Validators.email]],
       Ciudad: ["", Validators.required],
       Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
-      DescripcionJob: ["", Validators.required],
+      JobNumero: [""],
+      DescripcionJob: [""],
       Reembolsable: ["true", Validators.required],
       NombreCECO: [""],
       CECO: [""],
@@ -103,12 +113,47 @@ export class GenerarOrdenCompraComponent implements OnInit {
       PorcentajeAsumidoCECO: [""],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
-      RubroPresupuesto: ["", Validators.required],
+      RubroPresupuesto: [""],
       JustificacionGasto: ["", Validators.required],
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
     });        
     this.ObtenerUsuarioActual();
+    this.ObtenerEmpresasAraujo();
+
+      
+
+    // this.generarOrdenForm.valueChanges.subscribe(
+    //   (res)=>{
+    //     this.generarOrdenForm.controls['EmailContacto'].setValidators([Validators.email])
+    //     this.generarOrdenForm.controls['EmailContacto'].updateValueAndValidity()
+    //   }
+    // )
+      
+  }
+
+  ObtenerEmpresasAraujo(): any {
+    this.servicio.ObtenerEmpresasAraujo().then(
+      (res)=>{
+        this.ObjEmpresas = res;
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+        this.mostrarError("Error al cargar las empresas solicitantes");
+    }
+    );
+  }
+
+  seleccionarEmpresa(event){
+    let consecutivo = event.value.TipoConsecutivo;
+    this.TipoConsecutivo = consecutivo;
+    if (consecutivo === "Consultores") {
+      this.generarOrdenForm.controls["nroOrden"].setValue(this.ConsecutivoConsultores);      
+    }
+    else if (consecutivo === "Asociados") {
+      this.generarOrdenForm.controls["nroOrden"].setValue(this.ConsecutivoAsociados);
+    }
     
   }
 
@@ -159,7 +204,14 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.servicio.ObtenerConfiguracionApp().then(
        (res)=>{
          this.PorcentajeIva = res[0].ValorIva; 
+         this.IdRegConfiguracionApp = res[0].Id; 
          this.PorcentajeIvaUtilizar = this.PorcentajeIva;
+         let ConsecutivoConsultores = res[0].ConsecutivoConsultores;
+         ConsecutivoConsultores = ConsecutivoConsultores.split("-");
+         this.ConsecutivoConsultores = ConsecutivoConsultores[0] + "-" + (parseInt(ConsecutivoConsultores[1])+1);
+         let ConsecutivoAsociados = res[0].ConsecutivoAsociados;
+         ConsecutivoAsociados = ConsecutivoAsociados.split("-");
+         this.ConsecutivoAsociados = ConsecutivoAsociados[0] + "-" + (parseInt(ConsecutivoAsociados[1])+1);
          this.spinnerService.hide();        
        }
     )
@@ -239,12 +291,11 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.Reembolso = true;
     } else {
       this.Reembolso = false;
-      this.participacion = [];
     }
   }
 
   AgregarParticipacion() {
-    this.spinnerService.show();
+    this.spinnerService.show();    
     this.validarNombreCECO = false;
     this.validarCECO = false;
     this.validarNJOB = false;
@@ -253,36 +304,54 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let NombreCECO = this.generarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.generarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.generarOrdenForm.controls["NumeroJobCECO"].value;
-    let PorcentajeAsumidoCECO = this.generarOrdenForm.controls[
-      "PorcentajeAsumidoCECO"
-    ].value;
+    let PorcentajeAsumidoCECO = this.generarOrdenForm.controls["PorcentajeAsumidoCECO"].value;
+
+    if (PorcentajeAsumidoCECO > 100) {
+      this.mostrarAdvertencia("El porcentaje asumido no puede ser superior al 100%");
+      this.spinnerService.hide();
+      return false;
+    }
 
     if (NombreCECO === "") {
       this.validarNombreCECO = true;
+      this.spinnerService.hide(); 
       return false;
     }
     if (CECO === "") {
       this.validarCECO = true;
+      this.spinnerService.hide();
       return false;
     }
-    if (NumeroJobCECO === "") {
-      this.validarNJOB = true;
-      return false;
-    }
+    // if (NumeroJobCECO === "") {
+    //   this.validarNJOB = true;
+    //   return false;
+    // }
     if (PorcentajeAsumidoCECO === "") {
       this.validarPorcentajeCECO = true;
+      this.spinnerService.hide(); 
       return false;
     }
 
-    NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO)
-      .nombre;
+    // NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === NombreCECO);
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    });
+    let sumaTotal = sumaParticipacion + PorcentajeAsumidoCECO;
+    if (sumaTotal > 100) {
+      this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
+      this.spinnerService.hide();; 
+      return false;
+    }
 
     let objParticipacion = {
       id: Math.floor(Math.random() * 11),
       ceco: CECO,
-      nombre: NombreCECO,
+      nombre: ObjCeco.nombre,
       Njob: NumeroJobCECO,
-      asumido: PorcentajeAsumidoCECO
+      asumido: PorcentajeAsumidoCECO,
+      directorId: ObjCeco.DirectorCeco
     };
     this.participacion.push(objParticipacion);
 
@@ -306,7 +375,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.validarElementoServicio = false;
     this.validarEspecificaciones = false;
     let ValorTotal = 0;
-    this.Total = 0;
+    let calcularValorConIVa;
 
     if (this.item === "") {
       this.validarItem = true;
@@ -332,6 +401,17 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.validarEspecificaciones = true;
       return false;
     }
+
+    // if (this.TieneIva === true) {
+    //   let iva = this.PorcentajeIva / 100
+    //   calcularValorConIVa = (this.ValorUnitario * this.Cantidad) * iva;
+    //   ValorTotal = (this.ValorUnitario * this.Cantidad) + calcularValorConIVa;
+    //   this.Total = ValorTotal
+    // }
+    // else {
+    //   ValorTotal = this.ValorUnitario * this.Cantidad;
+    //   this.Total = ValorTotal
+    // }
 
     ValorTotal = this.ValorUnitario * this.Cantidad;
 
@@ -369,10 +449,14 @@ export class GenerarOrdenCompraComponent implements OnInit {
 
   }
 
+  setMinDate() {
+    this.minDate = this.generarOrdenForm.get('FechaSolicitud').value;
+  }
+
   calcularIva() {
     this.Subtotal = 0;
     this.ItemsGuardar.map(x=>{
-      this.Subtotal = this.Subtotal + x.ValorTotal;
+      this.Subtotal = this.Subtotal + x.ValorTotal
     });
   
     this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
@@ -405,6 +489,77 @@ export class GenerarOrdenCompraComponent implements OnInit {
     return fechaRetornar;
   }
 
+  async ObtenerConsecutivoAsociados(): Promise<any>{
+    let ConsecutivoAsociado = "";
+    await this.servicio.ObtenerConsecutivoAsociado().then(
+      async (res)=>{
+        let ConsecutivoAsociados = res[0].ConsecutivoAsociados;
+        ConsecutivoAsociados = ConsecutivoAsociados.split("-");
+        this.ConsecutivoAsociados = ConsecutivoAsociados[0] + "-" + (parseInt(ConsecutivoAsociados[1])+1);
+        ConsecutivoAsociado = this.ConsecutivoAsociados;
+        let obj = {
+          ConsecutivoAsociados: ConsecutivoAsociado
+        }
+        let mensaje = await this.GuardrConsecutivo(this.IdRegConfiguracionApp, obj);
+        if (mensaje === "Error") {
+          ConsecutivoAsociado = "Error";
+        }
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        ConsecutivoAsociado = "Error";
+      }
+    );
+
+    return ConsecutivoAsociado;
+  }
+
+  async ObtenerConsecutivoConsultores(): Promise<any>{
+    let ConsecutivoConsultore = "";
+    await this.servicio.ObtenerConsecutivoConsultores().then(
+      async (res)=>{
+        let ConsecutivoConsultores = res[0].ConsecutivoConsultores;
+        ConsecutivoConsultores = ConsecutivoConsultores.split("-");
+        this.ConsecutivoConsultores = ConsecutivoConsultores[0] + "-" + (parseInt(ConsecutivoConsultores[1])+1); 
+        ConsecutivoConsultore = this.ConsecutivoConsultores;
+        let obj = {
+          ConsecutivoConsultores: ConsecutivoConsultore
+        }
+        let mensaje = await this.GuardrConsecutivo(this.IdRegConfiguracionApp, obj);
+        if (mensaje === "Error") {
+          ConsecutivoConsultore = "Error";
+        }
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        ConsecutivoConsultore = "Error";
+      }
+    );
+
+    return ConsecutivoConsultore;
+  }
+
+  async GuardrConsecutivo(IdRegConfiguracionApp, obj): Promise<any> {
+   let Mensaje = "";
+    await this.servicio.GuardarConsecutivo(IdRegConfiguracionApp, obj).then(
+      (res)=>{
+        Mensaje = "Exitoso";
+      }
+    ).catch(
+      (error)=>{
+        this.mostrarError("Se ha producido un error con el número consecutivo al guardar");
+        console.log(error);
+        Mensaje = "Error";
+      }
+    );
+
+    return Mensaje;
+  }
+
   async onSubmit(form: NgForm) {
     this.spinnerService.show();
 
@@ -413,14 +568,23 @@ export class GenerarOrdenCompraComponent implements OnInit {
       
       this.mostrarAdvertencia("Faltan campos por diligenciar");   
       return false;
-    }
+    }    
 
-    if (this.Reembolso === false) {
-      if (this.participacion.length === 0) {
-        this.spinnerService.hide(); 
-        this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
-        return false;
-      }        
+    if (this.participacion.length === 0) {
+      this.spinnerService.hide(); 
+      this.mostrarAdvertencia("Por favor ingrese los porcentajes que asume cada unidad de negocio");   
+      return false;
+    } 
+
+    let sumaParticipacion = 0;
+    this.participacion.map((x)=>{
+      sumaParticipacion = sumaParticipacion + x.asumido;
+    }); 
+
+    if (sumaParticipacion < 100) {
+      this.mostrarAdvertencia("El total del procentaje asumido debe ser igual al 100%");
+      this.spinnerService.hide();
+      return false;
     }
 
     if (this.ItemsGuardar.length === 0) {
@@ -441,6 +605,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let FechaSolicitud = this.generarOrdenForm.controls["FechaSolicitud"].value;
     FechaSolicitud = this.AsignarFormatoFecha(FechaSolicitud); 
     let TiempoEntrega = this.generarOrdenForm.controls["TiempoEntrega"].value;
+    TiempoEntrega = this.AsignarFormatoFecha(TiempoEntrega);
     let RubroPresupuesto = this.generarOrdenForm.controls["RubroPresupuesto"].value;
     let JustificacionGasto = this.generarOrdenForm.controls["JustificacionGasto"].value;
     let coniva = this.TieneIva;
@@ -448,6 +613,20 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let Subtotal = this.Subtotal;
     let Iva = this.Iva;
     let Total = this.Total;
+    let EmpresaSolicitante = this.generarOrdenForm.controls["EmpresaSolicitante"].value;
+    
+    let Consecutivo;
+    if(this.TipoConsecutivo==="Asociados"){
+      Consecutivo = await this.ObtenerConsecutivoAsociados();
+    }
+    else if(this.TipoConsecutivo==="Consultores"){
+      Consecutivo = await this.ObtenerConsecutivoConsultores();
+    }
+
+    if (Consecutivo === "" || Consecutivo === "Error") {
+      this.mostrarError("Error al asignar el numero consecutivo");
+      return false;
+    }
 
     let objOrden = {
       Title: EntradaCompania,
@@ -471,7 +650,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
       Total: Total,
       NombreSolicitanteId: this.SolicitadoPor,
       JefeDirectoId: this.usuarioActual.IdJefeDirecto,
-      ResponsableActualId: this.usuarioActual.IdJefeDirecto
+      ResponsableActualId: this.usuarioActual.IdJefeDirecto,
+      EmpresaSolicitante: EmpresaSolicitante.RazonSocial,
+      Consecutivo: Consecutivo
     }    
     
     this.servicio.guardarOrden(objOrden).then(

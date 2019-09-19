@@ -9,6 +9,19 @@
                 <div style="padding-top:20px; padding:15px">
                     <mat-card>
                         <div class="row">
+                            <div class="col-md-2 offset-md-10 text-center">
+                                <label for="Nro de orden">Nro de orden</label>
+                                <input matInput formControlName="nroOrden"  readonly id="nroOrden"  class="text-center">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field style="width: 100%">
+                                    <input matInput placeholder="Empresa solicitante" formControlName="EmpresaSolicitante" readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
                                 <mat-form-field style="width: 100%">
                                     <input matInput placeholder="Entidad / Compañia" formControlName="EntidadCompania" [readonly]="SoloLectura">
@@ -103,7 +116,7 @@
                                 </mat-error>
                             </div>
                         </div>
-                        <div *ngIf="!Reembolso">
+                        <div>
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
@@ -181,6 +194,7 @@
                                             <td>{{item.asumido}}</td>
                                             <td>
                                                 <button *ngIf="!SoloLectura" type="button" class="btnBorrar" (click)="eliminarParticipacion(item.id)"><i class="fa fa-close"></i></button>
+                                                <button *ngIf="!SoloLectura" type="button" class="btnEditar" (click)="EditarParticipacion(templateParticipacion,item)"><i class="fa fa-pencil"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -212,8 +226,13 @@
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
-                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega" [readonly]="SoloLectura">
+                                <input matInput [matDatepicker]="pickerTiempoEntrega" placeholder="Tiempo de entrega" formControlName="TiempoEntrega">
+                                <mat-datepicker-toggle matSuffix [for]="pickerTiempoEntrega"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerTiempoEntrega></mat-datepicker>
                             </mat-form-field>
+                            <!-- <mat-form-field style="width: 100%">
+                                <input matInput placeholder="Tiempo de entrega" formControlName="TiempoEntrega" [readonly]="SoloLectura">
+                            </mat-form-field> -->
                             <mat-error>
                                 <span *ngIf="!editarOrdenForm.get('TiempoEntrega').valid && editarOrdenForm.get('TiempoEntrega').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                             </mat-error>
@@ -242,21 +261,23 @@
                 <br>
                 <mat-card>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="col-sm-10">
-                                <label for="staticEmail" class="col-sm-6 col-form-label">con Iva?</label>
-                                <mat-radio-group aria-label="Select an option" formControlName="IvaSiNo" (change)="SeleccionIva($event)" [disabled]="SoloLectura">
-                                    <mat-radio-button value="si" style="margin-right: 14px;">SI</mat-radio-button>
-                                    <mat-radio-button value="no">NO</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
+                        <div class="col-md-12">
+                            <label for="staticEmail" class="col-sm-6 col-form-label">con Iva?</label>
+                            <mat-radio-group aria-label="Select an option" formControlName="IvaSiNo" (change)="SeleccionIva($event)" [disabled]="SoloLectura">
+                                <mat-radio-button value="si" style="margin-right: 14px;">SI</mat-radio-button>
+                                <mat-radio-button value="no">NO</mat-radio-button>
+                            </mat-radio-group>
                         </div>
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="row">
                         <div class="col-md-3">
                             <mat-form-field style="width: 100%">
                                 <mat-label>Tipo de moneda</mat-label>
                                 <mat-select formControlName="TipoMoneda" [disabled]="SoloLectura">
                                     <mat-option value="COP">COP</mat-option>
-                                    <mat-option value="COP">USD</mat-option>
+                                    <mat-option value="USD">USD</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -320,6 +341,37 @@
         </div>
     </div>
 </form>
+
+<ng-template #templateParticipacion>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Modificar participación</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+    </div>
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field style="width: 100%">
+                        <input matInput placeholder="N° JOB" [(ngModel)]="NJob">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field style="width: 100%">
+                        <input type="number" min="0" max="100" matInput placeholder="% Asumido" [(ngModel)]="Asumido">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="ModificarParticipacion()">Modificar</button>
+        <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancelar</button>
+    </div>
+</ng-template>
 
 <ng-template #templateItems>
     <div class="modal-header">

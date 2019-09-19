@@ -13,6 +13,9 @@ import { Participacion } from '../Entidades/participacion';
 import { itemsOrden } from '../Entidades/itemsOrden';
 import { EmailProperties } from '@pnp/sp';
 import * as CryptoJS from 'crypto-js';
+import domtoimage from 'dom-to-image';
+import * as jsPDF from 'jspdf';
+
 
 @Component({
   selector: 'app-ver-orden-compra',
@@ -68,13 +71,26 @@ export class VerOrdenCompraComponent implements OnInit {
   idJefe: any;
   idGerente: any;
   EstadoSiguiente: string;
-  ResponsableSiguiente: string;
+  ResponsableSiguiente: any;
   motivoDevolucion: string;
   validarDevolucion: boolean;
   PorcentajeIva: any;
   PorcentajeIvaUtilizar: number;
   TieneIva: boolean;
   SoloLectura: boolean;
+  FirmasCECOS: any;
+  montoDO: any;
+  usuarioDirectorOperativo: any;
+  nombreDO: any;
+  emailDO: any;
+  idDO: any;
+  firmaDO: any;
+  usuarioAuxContable: any;
+  nombreAuxContable: any;
+  emailAuxContable: any;
+  idAuxContable: any;
+  firmaAuxContable: any;
+  Order: string;
 
   constructor(
     private servicio: SPServicio,
@@ -117,28 +133,29 @@ export class VerOrdenCompraComponent implements OnInit {
 
   ngOnInit() {
     this.VerOrdenForm = this.formBuilder.group({
-      EntidadCompania: ["", Validators.required],
-      PersonaContacto: ["", Validators.required],
-      TelefonoContacto: ["", Validators.required],
-      EmailContacto: ["", [Validators.required]],
-      Ciudad: ["", Validators.required],
-      Paginas: ["", Validators.required],
-      JobNumero: ["", Validators.required],
-      DescripcionJob: ["", Validators.required],
-      Reembolsable: ["true", Validators.required],
+      nroOrden: [""],
+      EmpresaSolicitante: [""],
+      EntidadCompania: [""],
+      PersonaContacto: [""],
+      TelefonoContacto: [""],
+      EmailContacto: [""],
+      Ciudad: [""],
+      Paginas: [""],
+      JobNumero: [""],
+      DescripcionJob: [""],
+      Reembolsable: [""],
       NombreCECO: [""],
       CECO: [""],
       NumeroJobCECO: [""],
       PorcentajeAsumidoCECO: [""],
-      FechaSolicitud: ["", Validators.required],
-      TiempoEntrega: ["", Validators.required],
-      RubroPresupuesto: ["", Validators.required],
-      JustificacionGasto: ["", Validators.required],
-      IvaSiNo: ["si", Validators.required],
-      TipoMoneda: ["COP", Validators.required]
+      FechaSolicitud: [""],
+      TiempoEntrega: [""],
+      RubroPresupuesto: [""],
+      JustificacionGasto: [""],
+      IvaSiNo: [""],
+      TipoMoneda: [""]
     }); 
-    this.ObtenerUsuarioActual();
-    
+    this.ObtenerUsuarioActual();    
   }
 
   ObtenerUsuarioActual() {
@@ -147,8 +164,7 @@ export class VerOrdenCompraComponent implements OnInit {
         this.usuarioActual = new Usuario(respuesta.Title, respuesta.Email, respuesta.Id);        
         this.SolicitadoPor = this.usuarioActual.id;
         this.servicio.obtenerJefe(this.usuarioActual.id).then(
-          (res)=>{
-            
+          (res)=>{            
             if (res[0].JefeId !== null) {
               this.usuarioActual.IdJefeDirecto = res[0].JefeId;
               this.usuarioActual.NombreJefeDirecto = res[0].Jefe.Title;
@@ -189,7 +205,7 @@ export class VerOrdenCompraComponent implements OnInit {
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
     
     this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
-      (respuesta)=>{
+      async (respuesta)=>{
         this.ObjOrdenCompra = respuesta;
         this.VerOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
         this.VerOrdenForm.controls["PersonaContacto"].setValue(this.ObjOrdenCompra.PersonaContacto);
@@ -203,9 +219,9 @@ export class VerOrdenCompraComponent implements OnInit {
           this.VerOrdenForm.controls["Reembolsable"].setValue("true");          
         }
         else{
-          this.VerOrdenForm.controls["Reembolsable"].setValue("false");
-          this.obtenerParticipacion();
+          this.VerOrdenForm.controls["Reembolsable"].setValue("false");          
         }
+        let respue = await this.obtenerParticipacion();
         
         this.Reembolso = this.ObjOrdenCompra.Reembolsable;
         this.VerOrdenForm.controls["NombreCECO"].setValue(this.ObjOrdenCompra.NombreCECO);
@@ -219,12 +235,22 @@ export class VerOrdenCompraComponent implements OnInit {
         let coniva = this.ObjOrdenCompra.ConIva === true? "si": "no";      
         this.VerOrdenForm.controls["IvaSiNo"].setValue(coniva);
         this.VerOrdenForm.controls["TipoMoneda"].setValue(this.ObjOrdenCompra.Moneda);
+        this.VerOrdenForm.controls["nroOrden"].setValue(this.ObjOrdenCompra.Consecutivo);
+        this.VerOrdenForm.controls["EmpresaSolicitante"].setValue(this.ObjOrdenCompra.EmpresaSolicitante);
         this.PorcentajeIvaUtilizar = this.ObjOrdenCompra.PorcentajeIva;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
+        this.Order = this.ObjOrdenCompra.Consecutivo;
+        console.log(this.Order);
         if (this.CodigoEstado === 2 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
           this.SoloLectura = true;
         } 
         else if (this.CodigoEstado === 3 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
+          this.SoloLectura = true;
+        }
+        else if (this.CodigoEstado === 7 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
+          this.SoloLectura = true;
+        }
+        else if (this.CodigoEstado === 9 && this.usuarioActual.id === this.ObjOrdenCompra.ResponsableActualId) {
           this.SoloLectura = true;
         }
         // if(this.CodigoEstado === 5 || this.CodigoEstado === 6){
@@ -233,6 +259,9 @@ export class VerOrdenCompraComponent implements OnInit {
         this.usuarioSolicitante = this.ObjOrdenCompra.NombreSolicitanteId;
         this.UsuarioJefe = this.ObjOrdenCompra.JefeDirectoId;
         
+        this.ObtenerConfiguracion();
+        this.ObtenerDO();
+        this.AuxContable();
         this.obtenerFirmas();
         this.ObtenerItems();
       }
@@ -245,13 +274,81 @@ export class VerOrdenCompraComponent implements OnInit {
     
   }
 
+  ObtenerDO(): any {
+    this.servicio.ValidarUsuarioGerente().then(
+      (res)=>{
+        this.usuarioDirectorOperativo = res[0].DirectorOperativoId;
+        this.servicio.obtenerFirmas(this.usuarioDirectorOperativo).then(
+          (respuesta)=>{
+            this.nombreDO = respuesta[0].Title;
+            this.emailDO = respuesta[0].usuario.EMail;
+            this.idDO = respuesta[0].usuarioId;
+            if (respuesta[0].UrlFirma !== null) {
+              this.firmaDO = respuesta[0].UrlFirma.Url;
+            }       
+          }
+        ).catch(
+          (error)=>{
+            this.mostrarError("Error al cargar las firmas");
+            console.log(error);
+          }
+        )
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+      }
+    );
+  }
+
+  AuxContable(): any {
+    this.servicio.ValidarUsuarioGerente().then(
+      (res)=>{
+        this.usuarioAuxContable = res[0].AuxContableId;
+        this.servicio.obtenerFirmas(this.usuarioAuxContable).then(
+          (respuesta)=>{
+            this.nombreAuxContable = respuesta[0].Title;
+            this.emailAuxContable = respuesta[0].usuario.EMail;
+            this.idAuxContable = respuesta[0].usuarioId;
+            if (respuesta[0].UrlFirma !== null) {
+              this.firmaAuxContable = respuesta[0].UrlFirma.Url;
+            }       
+          }
+        ).catch(
+          (error)=>{
+            this.mostrarError("Error al cargar las firmas");
+            console.log(error);
+          }
+        )
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+      }
+    );
+  }
+
+  ObtenerConfiguracion(): any {
+    this.servicio.ObtenerConfiguracionApp().then(
+      (res)=> {
+          this.montoDO = res[0].MontoAprobacionDO;
+      }
+    ).catch (
+      (error)=> {
+        this.mostrarError("Error al cargar la configuracion");
+        console.log(error);
+      }
+    );
+  }
+
   ObtenerItems(): any {
 
     this.servicio.obtenerItems(this.idOrdenCompra).then(
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
             this.ItemsGuardar.map(x=>{
-              this.Total = this.Total + x.ValorTotal;
+              let sumarIva =  x.ValorTotal * (this.PorcentajeIvaUtilizar/100)
+              this.Total = x.ValorTotal + sumarIva;
           });
       
           this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
@@ -265,17 +362,73 @@ export class VerOrdenCompraComponent implements OnInit {
       );    
   }
 
-  obtenerParticipacion(): any {
+  async obtenerParticipacion(): Promise<any>{
+    let respuesta = "";
     this.servicio.obtenerParticipacion(this.idOrdenCompra).then(
-      (res)=>{
+      async (res)=>{
           this.participacion = Participacion.fromJsonList(res);
+          let respuesta = await this.ObtenerFirmasCecos();
       }
     ).catch(
       (error)=>{
         this.mostrarError("Error al cargar la orden");
         console.log(error);
+        respuesta = "Error";
       }
     );
+
+    return respuesta;
+  }
+
+  async ObtenerFirmasCecos(): Promise<any> {
+    let contador = 0;
+    let swithc = false;
+    let stringHtml = "";
+    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === true);
+    stringHtml = "<tr>{0}</tr>";
+    contador = 0;
+    swithc = true;
+    await Promise.all(ObjCeco.map(async (element) => {
+    
+          if(swithc === true) {
+            let respuesta = await this.ConsultaFirmaDirectorCeco(element.idDirectorCECO);
+            stringHtml = stringHtml.replace("{0}",'<td width="33.3%">'+
+                              '<span class="background" id="table-compra">Director CECO</span><br><br>'+
+                              '<img src="'+respuesta+'" *ngIf="CodigoEstado === 3 || CodigoEstado === 4 ||" width="50%" alt="" ><br>'+
+                              '<span>'+element.nombre+'</span><br>'+
+                          '</td>{0}');
+            contador++;        
+          }  
+          
+          swithc = contador === 3? false: true; 
+          if (swithc === false) {
+            stringHtml = stringHtml.replace("{0}","");
+            stringHtml = stringHtml + "<tr>{0}</tr>"; 
+            contador = 0;
+            swithc = true;
+          }        
+          
+    }));    
+    stringHtml = stringHtml.replace("{0}","");
+    this.FirmasCECOS = stringHtml;    
+  }
+
+  async ConsultaFirmaDirectorCeco(idDirectorCECO): Promise<any>{
+    let firmaCeco = "";
+    await this.servicio.obtenerFirmas(idDirectorCECO).then(
+      (respuesta)=> {        
+        if (respuesta[0].UrlFirma !== null) {
+          firmaCeco = respuesta[0].UrlFirma.Url;
+        }   
+    }
+    ).catch(
+      (error)=>{
+        firmaCeco = "Error";
+        console.log(error);
+      }
+    )
+
+    return firmaCeco;
   }
 
   obtenerFirmas(): any {    
@@ -347,53 +500,213 @@ export class VerOrdenCompraComponent implements OnInit {
     )
   }
 
-  AprobarOrden(){
+  async AprobarOrden() {
     this.spinnerService.show();
     if (this.CodigoEstado === 2) {
-      this.EstadoSiguiente = "En revisión del gerente";
-      this.ResponsableSiguiente = this.idGerente;
-        let objAprobar ={
-            Estado: this.EstadoSiguiente, 
-            CodigoEstado: 3,
-            ResponsableActualId: this.idGerente,
-            GerenteAdminId: this.idGerente
+      this.MetodoAprovacionJefe();
+    }  
+    else if(this.CodigoEstado === 7){
+      this.MetodoAprobacionCECO();
+    }
+    else if (this.CodigoEstado === 3) {
+      this.MetodoAprobacionGerente();      
+    }
+    else if (this.CodigoEstado === 9) {
+      this.MetodoAprobacionDO();
+    }
+  }
+
+  MetodoAprobacionDO(): any {
+    this.EstadoSiguiente = "En revisión de Aux. Contabilidad";
+        this.ResponsableSiguiente = this.idAuxContable;
+          let objAprobar = {
+              Estado: this.EstadoSiguiente,
+              CodigoEstado: 11,
+              ResponsableActualId: this.idAuxContable
+          }        
+  
+          let TextoCorreo = '<p>Cordial saludo</p>'+
+          '<br>'+
+          '<p>Hay una orden de compra pendiente para su revisión</p>'+
+          '<br>'+
+          '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+          
+          let ObjCorreo = {
+            TextoCorreo: TextoCorreo,
+            aQuien: [this.emailAuxContable]
+          }
+          this.modificarOrden(objAprobar, ObjCorreo);
+  }
+
+  MetodoAprobacionGerente(): any {
+    let monto = this.montoDO;
+
+      if (this.Total >= monto) {
+        this.EstadoSiguiente = "En revisión Director Operativo";
+        this.ResponsableSiguiente = this.idDO;
+          let objAprobar = {
+              Estado: this.EstadoSiguiente,
+              CodigoEstado: 9,
+              ResponsableActualId: this.idDO,
+              DirectorOperativoId: this.idDO
+          }        
+  
+          let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>Hay una orden de compra pendiente para su revisión</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+          
+          let ObjCorreo = {
+            TextoCorreo: TextoCorreo,
+            aQuien: [this.emailDO]
+          }
+          this.modificarOrden(objAprobar, ObjCorreo);
+      }
+      else {
+        this.EstadoSiguiente = "En revisión de Aux. Contabilidad";
+        this.ResponsableSiguiente = this.idAuxContable;
+          let objAprobar = {
+              Estado: this.EstadoSiguiente,
+              CodigoEstado: 11,
+              ResponsableActualId: this.idAuxContable
+          }        
+  
+          let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>Hay una orden de compra pendiente para su revisión</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+          
+          let ObjCorreo = {
+            TextoCorreo: TextoCorreo,
+            aQuien: [this.emailAuxContable]
+          }
+          this.modificarOrden(objAprobar, ObjCorreo); 
+      }
+  }
+  
+  async MetodoAprobacionCECO(): Promise<any> {
+    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false && x.idDirectorCECO !== this.usuarioActual.id);
+      if (ObjCeco.length > 0) {
+        // let IdParticipacion = ObjCeco[0].id;
+        let NombreCeco = ObjCeco[0].nombre;
+        let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
+        let EmailDirector = ObjCeco[0].EmailDirector;
+        this.EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+        this.ResponsableSiguiente = IdDirectorCeco;
+        let objAprobar = {
+          Estado: this.EstadoSiguiente,
+          CodigoEstado: 7,
+          ResponsableActualId: this.ResponsableSiguiente
         }
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>Hay una orden de compra para su revisión</p>'+
+                            '<p>Hay una orden de compra pendiente para su revisión</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+        
+        let ObjCorreo = {
+          TextoCorreo: TextoCorreo,
+          aQuien: [EmailDirector]
+        }
+        let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+        let IdParticipacion = ObjCeco2[0].id;
+        let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
+        this.modificarOrden(objAprobar, ObjCorreo);
+      }
+      else {
+        this.EstadoSiguiente = "En revisión del gerente";
+        this.ResponsableSiguiente = this.idGerente;
+        let objAprobar = {
+            Estado: this.EstadoSiguiente,
+            CodigoEstado: 3,
+            ResponsableActualId: this.idGerente,
+            GerenteAdminId: this.idGerente
+        }
+  
+        let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>Hay una orden de compra pendiente para su revisión</p>'+
                             '<br>'+
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
           aQuien: [this.emailGerente]
+        } 
+        let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+        let IdParticipacion = ObjCeco2[0].id;
+        let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
+        this.modificarOrden(objAprobar, ObjCorreo);       
+      } 
+  }
+
+  async MetodoAprovacionJefe(): Promise<any> {
+    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
+      if (ObjCeco.length > 0) {
+        let IdParticipacion = ObjCeco[0].id;
+        let NombreCeco = ObjCeco[0].nombre;
+        let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
+        let EmailDirector = ObjCeco[0].EmailDirector;
+        this.EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+        this.ResponsableSiguiente = IdDirectorCeco;
+        let objAprobar = {
+          Estado: this.EstadoSiguiente,
+          CodigoEstado: 7,
+          ResponsableActualId: this.ResponsableSiguiente
         }
-        
-        this.modificarOrden(objAprobar, ObjCorreo);
-        // this.modificarOrden(objAprobar);    
-    }
-    else if (this.CodigoEstado === 3) {
-      this.EstadoSiguiente = "Aprobado";
-      this.ResponsableSiguiente = null;
-        let objAprobar ={
-            Estado: this.EstadoSiguiente,
-            CodigoEstado: 4,
-            ResponsableActualId: -1
-        }        
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
-                            '<p>La orden N° '+this.idOrdenCompra+' ha sido aprobada</p>'+
+                            '<p>Hay una orden de compra pendiente para su revisión</p>'+
                             '<br>'+
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
-          aQuien: [this.emailUsuario]
+          aQuien: [EmailDirector]
         }
-        this.modificarOrden(objAprobar, ObjCorreo); 
+        // let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
+        this.modificarOrden(objAprobar, ObjCorreo);
+      }
+  }
+
+  async ActualizarEstadoParticipacion(id, Estado): Promise<any> {
+    let res = "";
+    await this.servicio.ActualizarAprobacionParticipacion(id, Estado).then(
+      (respuesta)=>{
+        res = "bien";
+      }
+    ).catch(
+      (error)=>{
+        console.log(error);
+        res = "Error";
+      }
+    );
+    return res;
+  }
+
+  RecibirOC(){
+    let objcorreo = null;
+    this.EstadoSiguiente = "Pendiente por radicar factura"
+    let objAprobar = {
+      Estado: this.EstadoSiguiente,
+      CodigoEstado: 12
     }
+    this.modificarOrden(objAprobar, objcorreo);
+  }
+
+  PagarFac() { 
+    let objcorreo = null;
+    this.EstadoSiguiente = "Pagada"
+    let objAprobar = {
+      Estado: this.EstadoSiguiente,
+      CodigoEstado: 13,
+      ResponsableActualId: -1
+    }
+    this.modificarOrden(objAprobar, objcorreo);
   }
 
   RechazarOrden(template: TemplateRef<any>){
@@ -413,7 +726,114 @@ export class VerOrdenCompraComponent implements OnInit {
         return false;
     }
     if (this.CodigoEstado === 2) {
-      this.EstadoSiguiente = "Devuelta por el jefe";
+      this.MetodoRechazoJefe();   
+    }
+    else if (this.CodigoEstado === 3) {
+      this.MetodoRechazoGerente();
+    }
+    else if (this.CodigoEstado === 7) {
+      this.MetodoRechazoCeco();
+    }
+    else if (this.CodigoEstado === 9) {
+      this.MetodoRechazoDO();
+    }
+  }
+
+  async MetodoRechazoDO(): Promise<any> {
+    this.EstadoSiguiente = "Devuelta por el director operativo";
+      this.ResponsableSiguiente = this.idUsuario;
+        let objAprobar ={
+            Estado: this.EstadoSiguiente,
+            CodigoEstado: 10,
+            ResponsableActualId: this.idUsuario
+        }        
+
+        let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el director operativo</p>'+
+                            '<br>'+
+                            '<strong>Motivo de la devolución:</strong>'+
+                            '<p>'+this.motivoDevolucion+'</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+        
+        let ObjCorreo = {
+          TextoCorreo: TextoCorreo,
+          aQuien: [this.emailUsuario, this.emailJefe]
+        }
+
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
+        this.modificarOrden(objAprobar, ObjCorreo); 
+  }
+
+  async MetodoRechazoCeco(): Promise<any> {
+    let ObjCeco = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+    this.EstadoSiguiente = "Devuelta por el Ceco "+ ObjCeco[0].nombre;
+      this.ResponsableSiguiente = this.idUsuario;
+        let objAprobar ={
+            Estado: this.EstadoSiguiente,
+            CodigoEstado: 8,
+            ResponsableActualId: this.idUsuario
+        }        
+
+        let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el CECO '+ ObjCeco[0].nombre+'</p>'+
+                            '<br>'+
+                            '<strong>Motivo de la devolución:</strong>'+
+                            '<p>'+this.motivoDevolucion+'</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+        
+        let ObjCorreo = {
+          TextoCorreo: TextoCorreo,
+          aQuien: [this.emailUsuario, this.emailJefe]
+        }
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
+        this.modificarOrden(objAprobar, ObjCorreo); 
+  }
+
+  async MetodoRechazoGerente(): Promise<any> {
+    this.EstadoSiguiente = "Devuelta por el gerente";
+      this.ResponsableSiguiente = this.idUsuario;
+        let objAprobar ={
+            Estado: this.EstadoSiguiente,
+            CodigoEstado: 6,
+            ResponsableActualId: this.idUsuario
+        }        
+
+        let TextoCorreo = '<p>Cordial saludo</p>'+
+                            '<br>'+
+                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el Gerente Administrativo</p>'+
+                            '<br>'+
+                            '<strong>Motivo de la devolución:</strong>'+
+                            '<p>'+this.motivoDevolucion+'</p>'+
+                            '<br>'+
+                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
+        
+        let ObjCorreo = {
+          TextoCorreo: TextoCorreo,
+          aQuien: [this.emailUsuario, this.emailJefe]
+        }
+
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
+        }
+        this.modificarOrden(objAprobar, ObjCorreo); 
+  }
+
+  async MetodoRechazoJefe(): Promise<any> {
+    this.EstadoSiguiente = "Devuelta por el jefe";
       this.ResponsableSiguiente = this.idUsuario;
         let objAprobar = {
             Estado: this.EstadoSiguiente, 
@@ -426,7 +846,7 @@ export class VerOrdenCompraComponent implements OnInit {
                             '<br>'+
                             '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el jefe</p>'+
                             '<br>'+
-                            '<strong>Motivo de la devolición:</strong>'+
+                            '<strong>Motivo de la devolución:</strong>'+
                             '<p>'+this.motivoDevolucion+'</p>'+
                             '<br>'+
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
@@ -436,33 +856,13 @@ export class VerOrdenCompraComponent implements OnInit {
           aQuien: [this.emailUsuario]
         }
         
-        this.modificarOrden(objAprobar, ObjCorreo);
-        // this.modificarOrden(objAprobar);    
-    }
-    else if (this.CodigoEstado === 3) {
-      this.EstadoSiguiente = "Devuelta por el gerente";
-      this.ResponsableSiguiente = this.idUsuario;
-        let objAprobar ={
-            Estado: this.EstadoSiguiente,
-            CodigoEstado: 6,
-            ResponsableActualId: this.idUsuario
-        }        
-
-        let TextoCorreo = '<p>Cordial saludo</p>'+
-                            '<br>'+
-                            '<p>La orden N° '+this.idOrdenCompra+' ha sido devuelta por el Gerente Administrativo</p>'+
-                            '<br>'+
-                            '<strong>Motivo de la devolición:</strong>'+
-                            '<p>'+this.motivoDevolucion+'</p>'+
-                            '<br>'+
-                            '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
-        
-        let ObjCorreo = {
-          TextoCorreo: TextoCorreo,
-          aQuien: [this.emailUsuario, this.emailJefe]
+        let obj = this.participacion.filter(x=> x.Aprobado === true);
+        for (let index = 0; index < obj.length; index++) {
+          const element = obj[index];
+          let Resp = await this.ActualizarEstadoParticipacion(element.id, false);
         }
-        this.modificarOrden(objAprobar, ObjCorreo); 
-    }
+        this.modificarOrden(objAprobar, ObjCorreo);
+        // this.modificarOrden(objAprobar); 
   }
 
   enviarNotificacion(ObjCorreo): any {   
@@ -496,7 +896,13 @@ export class VerOrdenCompraComponent implements OnInit {
   modificarOrden(objAprobar, ObjCorreo){
     this.servicio.modificarOrden(this.idOrdenCompra, objAprobar).then(
       (res)=>{
-        this.enviarNotificacion(ObjCorreo);
+        if (ObjCorreo !== null) {
+          this.enviarNotificacion(ObjCorreo);
+        }
+        else if (ObjCorreo === null) {
+          this.obtenerServicio();
+        }
+        
       }
     ).catch(
       (error)=>{
@@ -543,6 +949,37 @@ export class VerOrdenCompraComponent implements OnInit {
         }, 3000);
       }
     );
+  }
+  
+  exportarPdf() {
+    var node = document.getElementById('fromatoExportar');
+    var img;
+    var filename;
+    var newImage;
+    domtoimage.toJpeg(node, { bgcolor: '#fff', quality: 1 }).then(function (dataUrl) {
+      img = new Image();
+      img.src = dataUrl;
+      newImage = img.src;
+      img.onload = function () {
+        var pdfWidth = img.width;
+        var pdfHeight = img.height;
+        // FileSaver.saveAs(dataUrl, 'my-pdfimage.png'); // Save as Image
+        var doc;
+        if (pdfWidth > pdfHeight) {
+          doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
+        }
+        else {
+          doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
+        }
+        var width = doc.internal.pageSize.getWidth();
+        var height = doc.internal.pageSize.getHeight();
+        doc.addImage(newImage, 'PNG', 10, 10, width, height);
+        filename = 'Orden de compra Nro '+ this.Order +'_.pdf';
+        doc.save(filename);
+      };
+    })
+      .catch(function (error) {
+      });
   }
 
 

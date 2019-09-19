@@ -4,19 +4,42 @@ export class Participacion {
       ceco: string;
       nombre: string;
       Njob: string;
-      asumido: string;
+      asumido: number;
+      idDirectorCECO: number;
+      Aprobado: boolean;
+      EmailDirector: string;
 
-    constructor(ceco: string, nombre: string, Njob: string, asumido: string, id: number){
+    constructor(
+        ceco: string, 
+        nombre: string, 
+        Njob: string, 
+        asumido: number, 
+        id: number, 
+        idDirectorCECO: number, 
+        Aprobado: boolean,
+        EmailDirector: string) {
         
         this.ceco = ceco;
         this.nombre = nombre;
         this.Njob = Njob;
         this.asumido = asumido;
         this.id = id;
+        this.idDirectorCECO = idDirectorCECO;
+        this.Aprobado = Aprobado;
+        this.EmailDirector = EmailDirector;
     }
 
     public static fromJson(element: any) {
-        return new Participacion(element.Title, element.Nombre, element.NumeroJob, element.PorcentajeAsumido, element.Id);
+        let Email = element.DirectorCeco.EMail;
+        return new Participacion(
+            element.Title, 
+            element.Nombre, 
+            element.NumeroJob, 
+            element.PorcentajeAsumido, 
+            element.Id, 
+            element.DirectorCecoId, 
+            element.Aprobado,
+            Email);
     }
 
     public static fromJsonList(elements: any) {

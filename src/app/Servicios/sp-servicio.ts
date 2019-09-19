@@ -33,7 +33,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyIsImtpZCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MjM0MTAwNywibmJmIjoxNTYyMzQxMDA3LCJleHAiOjE1NjIzNzAxMDcsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.SOYykf1yNx-tOCX37yd27DG8dYhIfd_2ZFcEpKdVW2SkpfrwhL6_8rifWuooxiCXDMfpETxYKmooNwRZyaRIEiBMUCSAs15-1Z2LsrJ_3xRV0nZapOIvllrj2Zf3SgtK_19XMS4bjNk-G-KRoL9fz-ogrG3Uyc8bBpFM5Ahzahbu2-8pm0Lt3xbGo-8UfRBI6ZcvYKohMTz2WiY8mr_BtRZ_e0T7yy9dnTHMoPfgRDGXx2gKO_ku6RlLR1zuML1tr9uhnUC8FJfje8991L5_im0qrvNfWHuG3CM-IeRGj3YpPPW01Skc5i7d__DnWslexk1U8jKyuAY8okXqv2JMgA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NjkyMjk4MiwibmJmIjoxNTY2OTIyOTgyLCJleHAiOjE1NjY5NTIwODIsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiNTdjMWUwNjctOWM1My00MjQ4LWE2MmEtZmJhZGI3YWMwODUyQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInN1YiI6ImQ4ZWNhM2E3LTBiNTUtNDJhNy1iYTk3LTMxNTJjZjZkZTI0MCIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.2IkvmtUSRD2sDCLWhB8ZFcz58LVaPRjrwve5kZkfnJLx4PyV7YlZKwVeaUqrB-TVjvpxQx9c01y0PX4R5qnmukZflsCxGq5GPZNoGwwrZ_UFgThcs68KXV1l7qSnz-ttF5CF0b2JG-poGbF3hWQ6A7Z5FkIPCh8HZx5gcbmGfP1MufCmltRBPvBTAzDRaWGAMOTUD6yA47n_bvoI0P14UA3N6p-JbalAkOS5gpwg1kW6-oxRFWA5VaUwC0kG9UoScTlwpX_tN3MAH_SNikJJcrMP8u5SEvjb0YwpOaEU5aBu-tlxdHPBYam0X_naV8SL41ZS5VsuuQdKRshGwLmw0w'
             }
         }, environment.urlWeb);
 
@@ -45,7 +45,7 @@ export class SPServicio {
             headers: {
                 'Accept': 'application/json; odata=verbose',
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyIsImtpZCI6IkN0ZlFDOExlLThOc0M3b0MyelFrWnBjcmZPYyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2MjM0MTAwNiwibmJmIjoxNTYyMzQxMDA2LCJleHAiOjE1NjIzNzAxMDYsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.Q5Ysab0_xcBtLO4qk9C1LV_OPESrcAxWPyssDCwQIZD_Em7AG7x4F9gb0ms5NfEwmFnhQhS9mzA1Sno23TfNE0gMG3frCQpHWVM-fKC7WWozAyejbq0annAdeuZx7jg7YqVqhcuE3bTV1tQCIhD0UUFNnZuU6pyEaEwZf9LJqdFLMg0COXLABR80-Y99T3ac-4Uqsbreeo_ba4eM8MySjy9OQpTik-zXLZHc0pXU-_BxQhZ4g2pYLxZJKbjyDF-68qQQdsFxuwds_e9BwOhZaD43Y8Fg5Gg3lsV-UcJyZJ53RgCL5yUax2RxDW3Ao8y8Y2t8ceP39J0Oj0sAhDQbow' 
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSIsImtpZCI6InU0T2ZORlBId0VCb3NIanRyYXVPYlY4NExuWSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXJpYmFzYXMuc2hhcmVwb2ludC5jb21AM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwiaXNzIjoiMDAwMDAwMDEtMDAwMC0wMDAwLWMwMDAtMDAwMDAwMDAwMDAwQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsImlhdCI6MTU2NTIzMTEyNCwibmJmIjoxNTY1MjMxMTI0LCJleHAiOjE1NjUyNjAyMjQsImlkZW50aXR5cHJvdmlkZXIiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAM2FjZDI5NDUtNDdlOC00YTVjLTljNjgtMjkzOTY5MTA5ZTRkIiwibmFtZWlkIjoiZmFlYWNkNGUtN2E4OS00ZjU5LWFmYjAtNmNjNzJiYTA1YTJkQDNhY2QyOTQ1LTQ3ZTgtNGE1Yy05YzY4LTI5Mzk2OTEwOWU0ZCIsIm9pZCI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInN1YiI6ImI0YWUwMTkzLWQzMTAtNDhmMS05ZDI4LTBkZjgyZTY1YTAyYSIsInRydXN0ZWRmb3JkZWxlZ2F0aW9uIjoiZmFsc2UifQ.SRe-133oZqvbOlOPhyuh03P6OUu0wH7TlMMYP7XyQHmNhDnxXYw14ctkfM__4pLZIUe17TRxDQR4zjH3H2gDc3oohuKFrKkW8UifD13gjP3tHnIV9R3Za-tYX7k00wWzIcfYtoQPW0feba6RBaTNjJcYarZ-Dt3gvgIp1V39pHqOaMZkciYXFwMFCO8LRCIeWiARHIrv4CI0vDyLefOIUrql456PKxnYFZyAidZ5WSN5Aj10l0P0D3uoOXXimGFzD9-8nFa9CVPKkLnZE6NpLYD481oPsfri3Iab1nxcFs7T6dleJIzA4j2Sd7ZEccToA2ORnbUUts2eUpmDkTyHpg' 
             }
         }, environment.urlWebGH);
 
@@ -68,7 +68,7 @@ export class SPServicio {
     }
 
     ObtenerCentroCosto(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
         return respuesta;
     }
 
@@ -79,8 +79,9 @@ export class SPServicio {
                 Nombre: ObjParticipacion.nombre,
                 NumeroJob: ObjParticipacion.Njob,
                 PorcentajeAsumido: ObjParticipacion.asumido,
-                OrdenCompraId: idOrden,            
-              }
+                OrdenCompraId: idOrden, 
+                DirectorCecoId: ObjParticipacion.directorId           
+            }
         )
         return respuesta;
     }
@@ -126,7 +127,7 @@ export class SPServicio {
     }
 
     ObtenerServicio(idSolicitud){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Orden de compra'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaServicios).items.filter("idServicio eq "+idSolicitud+" and TipoServicio eq 'Orden de compra'").getAll();
         return respuesta;
     }
 
@@ -141,27 +142,27 @@ export class SPServicio {
     }
 
     obtenerOrdenCompra(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.getById(idOrden).get();
         return respuesta;
     }
 
-    obtenerFirmas(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPostGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
+    async obtenerFirmas(idUsuario): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionGH().web.lists.getByTitle(environment.ListaEmpleados).items.filter("usuarioId eq '"+idUsuario+"'").select("*","usuario/EMail").expand("usuario").get();
         return respuesta;
     }
 
     ValidarUsuarioGerente() {
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll(); 
         return respuesta;
     } 
 
     obtenerParticipacion(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.filter("OrdenCompraId eq '"+idOrden+"'").select("*", "DirectorCeco/EMail").expand("DirectorCeco").get();
         return respuesta;
     }
 
     obtenerItems(idOrden){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaItemsOrdenCompra).items.filter("OrdenCompraId eq '"+idOrden+"'").get();
         return respuesta;
     }
 
@@ -171,18 +172,58 @@ export class SPServicio {
     }
 
     obtenerOrdenesPendientes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("ResponsableActualId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").getAll();
         return respuesta;
     }
 
     obtenerMisOrdenes(idUsuario){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").orderBy("Id",true).getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaOrdenCompra).items.filter("NombreSolicitanteId eq '"+idUsuario+"'").select("*","NombreSolicitante/Title", "JefeDirecto/Title").expand("NombreSolicitante","JefeDirecto").orderBy("Id",true).getAll();
         return respuesta;
     }
 
     ObtenerConfiguracionApp(){
-        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").getAll();
         return respuesta;
-    }   
+    } 
+    
+    ObtenerEmpresasAraujo(){
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        return respuesta;
+    }
+
+    ObtenerConsecutivos() {
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaEmpresasAraujoIbarra).items.getAll();
+        return respuesta;
+    }
+
+    async ObtenerConsecutivoAsociado(): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoAsociados").getAll();
+        return respuesta;
+    }
+
+    async ObtenerConsecutivoConsultores(): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaConfiguracionApp).items.filter("CodigoServicio eq '3'").select("ConsecutivoConsultores").getAll();
+        return respuesta;
+    }
+
+    async GuardarConsecutivo(idRegistroConfig, ObjConsecutivo): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaConfiguracionApp).items.getById(idRegistroConfig).update(ObjConsecutivo);
+        return respuesta;
+    } 
+    
+    async ActualizarAprobacionParticipacion(id, Aprobado: boolean): Promise<any>{
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(id).update({
+            Aprobado: Aprobado
+        });
+        return respuesta;
+    }
+
+    ModificarParticipacion(id, Porcentaje, NJob){
+        let respuesta = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.getById(id).update({
+            PorcentajeAsumido: Porcentaje,
+            NumeroJob: NJob
+        });
+        return respuesta;
+    }
 
 }
