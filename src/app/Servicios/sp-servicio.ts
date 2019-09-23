@@ -68,10 +68,10 @@ export class SPServicio {
     }
 
     ObtenerCentroCosto(){
-        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaCentroCostos).items.getAll();
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaCentroCostos).items.select('*', 'DirectorCeco/Title', 'DirectorCeco/ID').expand('DirectorCeco').get();
         return respuesta;
     }
-
+    
     GuardarParticipacion(ObjParticipacion, idOrden){
         let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaPorcentajeUnidades).items.add(
             {

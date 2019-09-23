@@ -169,6 +169,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
               this.usuarioActual.IdJefeDirecto = res[0].JefeId;
               this.usuarioActual.NombreJefeDirecto = res[0].Jefe.Title;
               this.usuarioActual.EmailJefeDirecto = res[0].Jefe.EMail;
+              console.log(this.usuarioActual.EmailJefeDirecto);
             }
             this.usuarioActual.Area = res[0].Area;
             this.obtenerCentroCostos();
@@ -191,6 +192,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       .ObtenerCentroCosto()
       .then(res => {
         this.CentroCosto = centroCostos.fromJsonList(res);
+        console.log(this.CentroCosto);
         this.obtenerConfiguracion();        
       })
       .catch(error => {
@@ -350,10 +352,11 @@ export class GenerarOrdenCompraComponent implements OnInit {
       nombre: ObjCeco.nombre,
       Njob: NumeroJobCECO,
       asumido: PorcentajeAsumidoCECO,
-      directorId: ObjCeco.DirectorCeco
+      directorId: ObjCeco.DirectorCeco,
+      nombreDirector: ObjCeco.nombreDirector
     };
+    // console.log(objParticipacion.nombreDirector);
     this.participacion.push(objParticipacion);
-
     this.generarOrdenForm.controls["NombreCECO"].setValue("");
     this.generarOrdenForm.controls["CECO"].setValue("");
     this.generarOrdenForm.controls["NumeroJobCECO"].setValue("");
