@@ -33,6 +33,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   item: string;
   Cantidad: number;
   ValorUnitario: number;
+  ValorTotal: any;
   ElementoServicio: string;
   Especificaciones: string;
   validarItem: boolean;
@@ -41,7 +42,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   validarElementoServicio: boolean;
   validarEspecificaciones: boolean;
   ItemsGuardar: any[] = [];
-  Total: number;
+  Total: any;
   Subtotal: number;
   Iva: number;
   usuarioActual: Usuario;
@@ -116,7 +117,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
       RubroPresupuesto: [""],
       JustificacionGasto: ["", Validators.required],
       IvaSiNo: ["si", Validators.required],
-      TipoMoneda: ["COP", Validators.required]
+      TipoMoneda: ["COP", Validators.required],
+      
     });        
     this.ObtenerUsuarioActual();
     this.ObtenerEmpresasAraujo();
@@ -376,7 +378,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.validarValorUnitario = false;
     this.validarElementoServicio = false;
     this.validarEspecificaciones = false;
-    let ValorTotal = 0;
+    // let ValorTotal = 0;
     let calcularValorConIVa;
 
     if (this.item === "") {
@@ -415,7 +417,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     //   this.Total = ValorTotal
     // }
 
-    ValorTotal = this.ValorUnitario * this.Cantidad;
+    this.ValorTotal = this.ValorUnitario * this.Cantidad;
 
     let ObjGuardarItems = {      
       Title: this.item,
@@ -423,11 +425,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
       Especificaciones: this.Especificaciones,
       Cantidad: this.Cantidad,
       ValorUnitario: this.ValorUnitario,
-      ValorTotal: ValorTotal,
+      ValorTotal: this.ValorTotal.toFixed(2),
       numeroId: Math.floor(Math.random() * 11)
     } 
     
     this.ItemsGuardar.push(ObjGuardarItems);
+    console.log(this.ItemsGuardar);
     this.calcularIva();
     // this.ItemsGuardar.map(x=>{
     //     this.Subtotal = this.Subtotal + x.ValorTotal;
@@ -458,7 +461,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   calcularIva() {
     this.Subtotal = 0;
     this.ItemsGuardar.map(x=>{
-      this.Subtotal = this.Subtotal + x.ValorTotal
+      this.Subtotal = parseFloat(this.Subtotal.toString()) + parseFloat(x.ValorTotal)
     });
   
     this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
