@@ -341,18 +341,22 @@ export class VerOrdenCompraComponent implements OnInit {
     );
   }
 
+  calcularIva() {
+    this.Subtotal = 0;
+    this.ItemsGuardar.map(x=>{
+      this.Subtotal = parseFloat(this.Subtotal.toString()) + x.ValorTotal
+    });
+  
+    this.Iva = this.Subtotal * (this.PorcentajeIvaUtilizar/100);
+    this.Total = this.Subtotal + this.Iva;    
+  }
+
   ObtenerItems(): any {
 
     this.servicio.obtenerItems(this.idOrdenCompra).then(
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
-            this.ItemsGuardar.map(x=>{
-              let sumarIva =  x.ValorTotal * (this.PorcentajeIvaUtilizar/100)
-              this.Total = x.ValorTotal + sumarIva;
-          });
-      
-          this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-          this.Subtotal = this.Total - this.Iva;
+            this.calcularIva();
         }
       ).catch(
         (error)=>{

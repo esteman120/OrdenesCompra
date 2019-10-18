@@ -269,22 +269,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.PorcentajeIvaUtilizar = this.PorcentajeIva;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     } else {      
       this.TieneIva = false;
       this.PorcentajeIvaUtilizar = 0;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     }
   }  
@@ -474,11 +464,6 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let index = this.ItemsGuardar.findIndex(x=>x.id === ElementoId);
     this.ItemsGuardar.splice(index, 1);
     this.calcularIva();
-    // this.ItemsGuardar.map(x=>{
-    //     this.Total = this.Total + x.ValorTotal;
-    // });
-    // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-    // this.Subtotal = this.Total - this.Iva;
     this.spinnerService.hide();
   }
 
