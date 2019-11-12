@@ -351,7 +351,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.editarOrdenForm.controls["CECO"].setValue(item.value);
+    this.editarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
   }
 
   SeleccionIva(item){
@@ -378,14 +378,14 @@ export class EditarOrdenesComponent implements OnInit {
     this.validarNJOB = false;
     this.validarPorcentajeCECO = false;
 
-    let NombreCECO = this.editarOrdenForm.controls["NombreCECO"].value;
+    let ObjCECO = this.editarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.editarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.editarOrdenForm.controls["NumeroJobCECO"].value;
     let PorcentajeAsumidoCECO = this.editarOrdenForm.controls[
       "PorcentajeAsumidoCECO"
     ].value;
 
-    if (NombreCECO === "") {
+    if (ObjCECO === "") {
       this.validarNombreCECO = true;
       return false;
     }
@@ -402,7 +402,7 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
-    NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
@@ -414,10 +414,12 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
+
+
     let objParticipacion = {  
       id: "",    
       ceco: CECO,
-      nombre: NombreCECO,
+      nombre: ObjCeco.nombre,
       Njob: NumeroJobCECO,
       asumido: PorcentajeAsumidoCECO
     };

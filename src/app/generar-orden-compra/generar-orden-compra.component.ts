@@ -259,7 +259,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.generarOrdenForm.controls["CECO"].setValue(item.value);
+    this.generarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
   }
 
   SeleccionIva(item){
@@ -294,7 +294,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.validarNJOB = false;
     this.validarPorcentajeCECO = false;
 
-    let NombreCECO = this.generarOrdenForm.controls["NombreCECO"].value;
+    let ObjCECO = this.generarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.generarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.generarOrdenForm.controls["NumeroJobCECO"].value;
     let PorcentajeAsumidoCECO = this.generarOrdenForm.controls["PorcentajeAsumidoCECO"].value;
@@ -305,7 +305,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       return false;
     }
 
-    if (NombreCECO === "") {
+    if (ObjCECO === "") {
       this.validarNombreCECO = true;
       this.spinnerService.hide(); 
       return false;
@@ -326,7 +326,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     }
 
     // NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
-    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === NombreCECO);
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
