@@ -351,7 +351,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.editarOrdenForm.controls["CECO"].setValue(item.value);
+    this.editarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
   }
 
   SeleccionIva(item){
