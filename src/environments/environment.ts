@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
-  urlRaiz: 'https://aribasas.sharepoint.com',
-  urlWeb: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Servicios', 
-  urlWebGH: 'https://aribasas.sharepoint.com/sites/IntranetPruebas/Gestion-humana', 
-  urlReltativa: 'sites/IntranetPruebas',
+  urlRaiz: 'https://enovelsoluciones.sharepoint.com/',
+  urlWeb: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/servicios', 
+  urlWebGH: 'https://enovelsoluciones.sharepoint.com/sites/IntranetAraujo/gestion-humana', 
+  urlReltativa: 'sites/IntranetAraujo/servicios',
   ListaOrdenCompra: 'OrdenCompra',
   ListaItemsOrdenCompra: 'ItemsOrdenCompra',
   ListaPorcentajeUnidades: 'PorcentajeUnidades',
