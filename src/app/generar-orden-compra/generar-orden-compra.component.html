@@ -310,7 +310,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of ItemsGuardar">
+                                <tr *ngFor="let item of ItemsGuardar; let num = index">
                                     <td>{{item.Title}}</td>
                                     <td>{{item.Elemento}}</td>
                                     <td>{{item.Especificaciones}}</td>
@@ -318,7 +318,7 @@
                                     <td>{{item.ValorUnitario | number:'.2'}}</td>
                                     <td>{{item.ValorTotal | number:'.2'}}</td>
                                     <td>
-                                        <button class="btnBorrar" (click)="eliminarItem(item.numeroId)"><i class="fa fa-close"></i></button>
+                                        <button class="btnBorrar" (click)="eliminarItem(num)"><i class="fa fa-close"></i></button>
                                     </td>
                                 </tr>
                             </tbody>

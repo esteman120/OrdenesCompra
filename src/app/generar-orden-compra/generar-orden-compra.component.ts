@@ -458,10 +458,10 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.Total = this.Subtotal + this.Iva;    
   }
 
-  eliminarItem(ElementoId) {
+  eliminarItem(index) {
     this.spinnerService.show();
     this.Total = 0;    
-    let index = this.ItemsGuardar.findIndex(x=>x.numeroId === ElementoId);
+    // let index = this.ItemsGuardar.findIndex(x=>x.numeroId === ElementoId);
     this.ItemsGuardar.splice(index, 1);
     this.calcularIva();
     this.spinnerService.hide();
