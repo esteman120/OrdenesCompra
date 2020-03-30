@@ -909,7 +909,7 @@ export class VerOrdenCompraComponent implements OnInit {
         if (ObjCorreo !== null) {
           this.enviarNotificacion(ObjCorreo);
         }
-        else if (ObjCorreo === null) {
+        else {
           this.obtenerServicio();
         }
         
