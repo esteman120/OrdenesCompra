@@ -18,6 +18,16 @@ export class SPServicio {
         return configuracionSharepoint;
     }
 
+    public ObtenerConfiguracionJobs() {
+        const configuracionSharepoint = sp.configure({
+            headers: {
+                'Accept': 'application/json; odata=verbose'
+            }
+        }, environment.urlWebJobs);
+
+        return configuracionSharepoint;
+    }
+
     public ObtenerConfiguracionGH() {
         const configuracionSharepoint = sp.configure({
             headers: {
@@ -223,6 +233,11 @@ export class SPServicio {
             PorcentajeAsumido: Porcentaje,
             NumeroJob: NJob
         });
+        return respuesta;
+    }
+
+    obtenerProyectosJobs() {
+        let respuesta = from(this.ObtenerConfiguracionJobs().web.lists.getByTitle(environment.ListaProyectos).select('*', 'Cliente').expand('Cliente').items.getAll());
         return respuesta;
     }
 

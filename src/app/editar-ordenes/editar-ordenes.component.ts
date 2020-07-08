@@ -78,6 +78,8 @@ export class EditarOrdenesComponent implements OnInit {
   Asumido: number;
   IdParticipacion: any;
   NJob: any;
+  cliente = [];
+  clienteXdefecto: any[];
 
   constructor(
     private servicio: SPServicio,
@@ -117,7 +119,7 @@ export class EditarOrdenesComponent implements OnInit {
     this.SoloLectura = true;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.editarOrdenForm = this.formBuilder.group({
       nroOrden: [""],
       EmpresaSolicitante: ["",  Validators.required],
@@ -141,8 +143,8 @@ export class EditarOrdenesComponent implements OnInit {
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
     }); 
-
-    this.consultarOrden();
+    await this.ObtenerProyectos()
+    await this.consultarOrden();
   }
 
   getParams(url){
@@ -158,10 +160,32 @@ export class EditarOrdenesComponent implements OnInit {
   	return params;
   }
 
-  consultarOrden(): any {    
+  async ObtenerProyectos() {
+     this.servicio.obtenerProyectosJobs().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.cliente = respuesta;
+      }
+    )
+  }
+
+  clientes($event) {
+    let titulo = $event.value.Title
+    console.log($event)
+    this.editarOrdenForm.controls['DescripcionJob'].setValue(titulo)
+  }
+
+  async cargarDatosSelectPorDefecto() {
+    this.clienteXdefecto = await this.cliente.filter(x => {
+    return x.NumeroJob === this.ObjOrdenCompra.JobNumero
+   })
+ }
+ 
+
+  async consultarOrden() {    
+    await this.cargarDatosSelectPorDefecto();
     let Parametro = this.getParams(window.location.href);    
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
-    
     this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       (respuesta)=>{
         this.obtenerCentroCostos();
@@ -176,7 +200,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        this.editarOrdenForm.controls["JobNumero"].setValue(this.ObjOrdenCompra.JobNumero);
+        this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
@@ -686,7 +710,7 @@ export class EditarOrdenesComponent implements OnInit {
     let EmailContacto = this.editarOrdenForm.controls["EmailContacto"].value;
     let Ciudad = this.editarOrdenForm.controls["Ciudad"].value;
     let Paginas = this.editarOrdenForm.controls["Paginas"].value;
-    let JobNumero = this.editarOrdenForm.controls["JobNumero"].value;
+    let JobNumero = this.editarOrdenForm.controls["JobNumero"].value.NumeroJob;
     let DescripcionJob = this.editarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.editarOrdenForm.controls["FechaSolicitud"].value;
