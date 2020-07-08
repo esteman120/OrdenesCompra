@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { Usuario } from '../Entidades/usuario';
 import { SPServicio } from '../Servicios/sp-servicio';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
@@ -14,7 +14,9 @@ import { itemsOrden } from '../Entidades/itemsOrden';
 import { EmailProperties } from '@pnp/sp';
 import * as CryptoJS from 'crypto-js';
 import domtoimage from 'dom-to-image';
-import * as jsPDF from 'jspdf';
+import * as jspdf from 'jspdf';
+// import * as jspdf from 'jspdf'; 
+import html2canvas from 'html2canvas';
 
 
 @Component({
@@ -23,6 +25,8 @@ import * as jsPDF from 'jspdf';
   styleUrls: ['./ver-orden-compra.component.css']
 })
 export class VerOrdenCompraComponent implements OnInit {
+
+  @ViewChild('fromatoExportar', {static: true}) fromatoExportar: ElementRef;
 
   VerOrdenForm: FormGroup; 
   modalRef: BsModalRef;
@@ -357,13 +361,6 @@ export class VerOrdenCompraComponent implements OnInit {
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
             this.calcularIva();
-          //   this.ItemsGuardar.map(x=>{
-          //     let sumarIva =  x.ValorTotal * (this.PorcentajeIvaUtilizar/100)
-          //     this.Total = x.ValorTotal + sumarIva;
-          // });
-      
-          // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-          // this.Subtotal = this.Total - this.Iva;
         }
       ).catch(
         (error)=>{
@@ -910,7 +907,7 @@ export class VerOrdenCompraComponent implements OnInit {
         if (ObjCorreo !== null) {
           this.enviarNotificacion(ObjCorreo);
         }
-        else if (ObjCorreo === null) {
+        else {
           this.obtenerServicio();
         }
         
@@ -963,34 +960,36 @@ export class VerOrdenCompraComponent implements OnInit {
   }
   
   exportarPdf() {
-    var node = document.getElementById('fromatoExportar');
-    var img;
-    var filename;
-    var newImage;
-    domtoimage.toJpeg(node, { bgcolor: '#fff', quality: 1 }).then(function (dataUrl) {
-      img = new Image();
-      img.src = dataUrl;
-      newImage = img.src;
-      img.onload = function () {
-        var pdfWidth = img.width;
-        var pdfHeight = img.height;
-        // FileSaver.saveAs(dataUrl, 'my-pdfimage.png'); // Save as Image
-        var doc;
-        if (pdfWidth > pdfHeight) {
-          doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
-        }
-        else {
-          doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
-        }
-        var width = doc.internal.pageSize.getWidth();
-        var height = doc.internal.pageSize.getHeight();
-        doc.addImage(newImage, 'PNG', 10, 10, width, height);
-        filename = 'Orden de compra Nro '+ this.Order +'_.pdf';
-        doc.save(filename);
-      };
-    })
-      .catch(function (error) {
-      });
+    window.print();
+    // var node = document.getElementById('fromatoExportar');
+    // var img;
+    // var filename;
+    // var newImage;
+    // let doc = new jspdf();    
+    // domtoimage.toJpeg(node, { quality: 1 }).then(function (dataUrl) {
+    //   img = new Image();
+    //   img.src = dataUrl;
+    //   newImage = img.src;
+    //   img.onload = function () {
+    //     var pdfWidth = img.width;
+    //     var pdfHeight = img.height;
+    //     // FileSaver.saveAs(dataUrl, 'my-pdfimage.png'); // Save as Image
+    //     var doc;
+    //     if (pdfWidth > pdfHeight) {
+    //       doc = new jsPDF('l', 'px', [pdfWidth, pdfHeight]);
+    //     }
+    //     else {
+    //       doc = new jsPDF('p', 'px', [pdfWidth, pdfHeight]);
+    //     }
+    //     var width = doc.internal.pageSize.getWidth();
+    //     var height = doc.internal.pageSize.getHeight();
+    //     doc.addImage(newImage, 'PNG', 10, 10, width, height);
+    //     filename = 'Orden de compra Nro '+ this.Order +'_.pdf';
+    //     doc.save(filename);
+    //   };
+    // })
+    //   .catch(function (error) {
+    //   });
   }
 
 
