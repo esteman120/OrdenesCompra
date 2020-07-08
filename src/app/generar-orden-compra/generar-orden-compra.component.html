@@ -94,9 +94,17 @@
                     <mat-card>
                         <div class="row">
                             <div class="col-md-5">
-                                <mat-form-field style="width: 100%">
+                                <mat-form-field>
+                                    <mat-label>JOB N°</mat-label>
+                                    <mat-select formControlName="JobNumero" (selectionChange)="clientes($event)">
+                                        <mat-option *ngFor="let cliente of cliente" [value]="cliente">
+                                          {{cliente.NumeroJob}}                        
+                                        </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                <!-- <mat-form-field style="width: 100%">
                                     <input matInput placeholder="JOB N°" formControlName="JobNumero">
-                                </mat-form-field>
+                                </mat-form-field> -->
                                 <mat-error>
                                     <span *ngIf="!generarOrdenForm.get('JobNumero').valid && generarOrdenForm.get('JobNumero').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                                 </mat-error>
@@ -106,7 +114,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Descripción del JOB</label>
-                                    <textarea class="form-control" rows="3" formControlName="DescripcionJob"></textarea>
+                                    <textarea class="form-control" rows="3" formControlName="DescripcionJob" readonly></textarea>
                                     <mat-error>
                                         <span *ngIf="!generarOrdenForm.get('DescripcionJob').valid && generarOrdenForm.get('DescripcionJob').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                                     </mat-error>

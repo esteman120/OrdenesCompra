@@ -57,6 +57,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   IdRegConfiguracionApp: any;
   filteredOptions: Observable<string[]>;
   minDate: Date;
+  cliente = [];
 
   constructor(
     private servicio: SPServicio,
@@ -122,6 +123,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     });        
     this.ObtenerUsuarioActual();
     this.ObtenerEmpresasAraujo();
+    this.ObtenerProyectos();
 
       
 
@@ -222,6 +224,21 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.mostrarError("Se ha producido un error al cargar el iva");
       console.log(error);
     });
+  }
+
+  ObtenerProyectos() {
+    this.servicio.obtenerProyectosJobs().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.cliente = respuesta;
+      }
+    )
+  }
+
+  clientes($event) {
+    let titulo = $event.value.Title
+    console.log($event)
+    this.generarOrdenForm.controls['DescripcionJob'].setValue(titulo)
   }
 
   MostrarExitoso(mensaje: string) {
@@ -604,7 +621,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let EmailContacto = this.generarOrdenForm.controls["EmailContacto"].value;
     let Ciudad = this.generarOrdenForm.controls["Ciudad"].value;
     let Paginas = this.generarOrdenForm.controls["Paginas"].value;
-    let JobNumero = this.generarOrdenForm.controls["JobNumero"].value;
+    let JobNumero = this.generarOrdenForm.controls["JobNumero"].value.NumeroJob;
     let DescripcionJob = this.generarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.generarOrdenForm.controls["FechaSolicitud"].value;
