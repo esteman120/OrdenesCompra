@@ -200,7 +200,8 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
+        (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob) : this.editarOrdenForm.controls["JobNumero"].setValue('');
+        // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
