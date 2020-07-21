@@ -143,8 +143,10 @@ export class EditarOrdenesComponent implements OnInit {
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
     }); 
-    await this.ObtenerProyectos()
-    await this.consultarOrden();
+    this.ObtenerProyectos() 
+    setTimeout(() => {
+      this.consultarOrden();
+    }, 3000);
   }
 
   getParams(url){
@@ -162,9 +164,10 @@ export class EditarOrdenesComponent implements OnInit {
 
   async ObtenerProyectos() {
      this.servicio.obtenerProyectosJobs().subscribe(
-      (respuesta) => {
+      async (respuesta) => {
         console.log(respuesta);
         this.cliente = respuesta;
+        console.log(1)
       }
     )
   }
@@ -177,7 +180,7 @@ export class EditarOrdenesComponent implements OnInit {
 
   async cargarDatosSelectPorDefecto() {
     this.clienteXdefecto = await this.cliente.filter(x => {
-    return x.NumeroJob === this.ObjOrdenCompra.JobNumero
+    return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
    })
  }
  
@@ -189,6 +192,8 @@ export class EditarOrdenesComponent implements OnInit {
       async (respuesta)=>{
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
+        console.log(this.ObjOrdenCompra);
+        console.log(2)
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
         if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
@@ -200,7 +205,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob) : this.editarOrdenForm.controls["JobNumero"].setValue('');
+        (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
         // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
