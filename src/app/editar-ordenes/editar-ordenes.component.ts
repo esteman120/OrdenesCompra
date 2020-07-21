@@ -183,17 +183,17 @@ export class EditarOrdenesComponent implements OnInit {
  
 
   async consultarOrden() {    
-    await this.cargarDatosSelectPorDefecto();
     let Parametro = this.getParams(window.location.href);    
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
-    this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
-      (respuesta)=>{
+    await this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
+      async (respuesta)=>{
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
         if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
         }
+        await this.cargarDatosSelectPorDefecto();
         this.editarOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
         this.editarOrdenForm.controls["PersonaContacto"].setValue(this.ObjOrdenCompra.PersonaContacto);
         this.editarOrdenForm.controls["TelefonoContacto"].setValue(this.ObjOrdenCompra.TelefonoContacto);
