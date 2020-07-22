@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ElementRef, Compiler } from '@angular/core';
 import { Usuario } from '../Entidades/usuario';
 import { SPServicio } from '../Servicios/sp-servicio';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
@@ -105,7 +105,9 @@ export class VerOrdenCompraComponent implements OnInit {
     private route:ActivatedRoute,
     private router:Router,    
     private spinnerService: Ng4LoadingSpinnerService,
+    private compilador: Compiler
   ) {
+    this.compilador.clearCache();
     this.validarNombreCECO = false;
     this.validarCECO = false;
     this.validarNJOB = false;
