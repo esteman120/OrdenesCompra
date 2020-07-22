@@ -78,6 +78,8 @@ export class EditarOrdenesComponent implements OnInit {
   Asumido: number;
   IdParticipacion: any;
   NJob: any;
+  cliente = [];
+  clienteXdefecto: any[];
 
   constructor(
     private servicio: SPServicio,
@@ -117,7 +119,7 @@ export class EditarOrdenesComponent implements OnInit {
     this.SoloLectura = true;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.editarOrdenForm = this.formBuilder.group({
       nroOrden: [""],
       EmpresaSolicitante: ["",  Validators.required],
@@ -141,8 +143,10 @@ export class EditarOrdenesComponent implements OnInit {
       IvaSiNo: ["si", Validators.required],
       TipoMoneda: ["COP", Validators.required]
     }); 
-
-    this.consultarOrden();
+    this.ObtenerProyectos() 
+    setTimeout(() => {
+      this.consultarOrden();
+    }, 3000);
   }
 
   getParams(url){
@@ -158,25 +162,51 @@ export class EditarOrdenesComponent implements OnInit {
   	return params;
   }
 
-  consultarOrden(): any {    
+  async ObtenerProyectos() {
+     this.servicio.obtenerProyectosJobs().subscribe(
+      async (respuesta) => {
+        console.log(respuesta);
+        this.cliente = respuesta;
+        console.log(1)
+      }
+    )
+  }
+
+  clientes($event) {
+    let titulo = $event.value.Title
+    console.log($event)
+    this.editarOrdenForm.controls['DescripcionJob'].setValue(titulo)
+  }
+
+  async cargarDatosSelectPorDefecto() {
+    this.clienteXdefecto = await this.cliente.filter(x => {
+    return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
+   })
+ }
+ 
+
+  async consultarOrden() {    
     let Parametro = this.getParams(window.location.href);    
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
-    
-    this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
-      (respuesta)=>{
+    await this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
+      async (respuesta)=>{
         this.obtenerCentroCostos();
         this.ObjOrdenCompra = respuesta;
+        console.log(this.ObjOrdenCompra);
+        console.log(2)
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
         if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
         }
+        await this.cargarDatosSelectPorDefecto();
         this.editarOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
         this.editarOrdenForm.controls["PersonaContacto"].setValue(this.ObjOrdenCompra.PersonaContacto);
         this.editarOrdenForm.controls["TelefonoContacto"].setValue(this.ObjOrdenCompra.TelefonoContacto);
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        this.editarOrdenForm.controls["JobNumero"].setValue(this.ObjOrdenCompra.JobNumero);
+        (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
+        // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
@@ -223,12 +253,6 @@ export class EditarOrdenesComponent implements OnInit {
         (res)=>{
             this.ItemsGuardar = itemsOrden.fromJsonList(res);
             this.calcularIva();
-          //   this.ItemsGuardar.map(x=>{
-          //     this.Total = this.Total + x.ValorTotal;
-          // });
-      
-          // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-          // this.Subtotal = this.Total - this.Iva;
         }
       ).catch(
         (error)=>{
@@ -357,7 +381,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.editarOrdenForm.controls["CECO"].setValue(item.value);
+    this.editarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
   }
 
   SeleccionIva(item){
@@ -367,22 +391,12 @@ export class EditarOrdenesComponent implements OnInit {
       this.PorcentajeIvaUtilizar = this.PorcentajeIva;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     } else {      
       this.TieneIva = false;
       this.PorcentajeIvaUtilizar = 0;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     }
   }
@@ -394,14 +408,14 @@ export class EditarOrdenesComponent implements OnInit {
     this.validarNJOB = false;
     this.validarPorcentajeCECO = false;
 
-    let NombreCECO = this.editarOrdenForm.controls["NombreCECO"].value;
+    let ObjCECO = this.editarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.editarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.editarOrdenForm.controls["NumeroJobCECO"].value;
     let PorcentajeAsumidoCECO = this.editarOrdenForm.controls[
       "PorcentajeAsumidoCECO"
     ].value;
 
-    if (NombreCECO === "") {
+    if (ObjCECO === "") {
       this.validarNombreCECO = true;
       return false;
     }
@@ -418,7 +432,7 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
-    NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
@@ -430,10 +444,12 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
+
+
     let objParticipacion = {  
       id: "",    
       ceco: CECO,
-      nombre: NombreCECO,
+      nombre: ObjCeco.nombre,
       Njob: NumeroJobCECO,
       asumido: PorcentajeAsumidoCECO
     };
@@ -612,12 +628,6 @@ export class EditarOrdenesComponent implements OnInit {
         this.ItemsGuardar["id"] = idItem;
         this.ItemsGuardar.push(ObjGuardarItems);
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //     this.Total = this.Total + x.ValorTotal;
-        // });
-    
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
         this.validarItem = false;
         this.validarCantidad = false;
         this.validarValorUnitario = false;
@@ -649,11 +659,6 @@ export class EditarOrdenesComponent implements OnInit {
         let index = this.ItemsGuardar.findIndex(x=>x.id === ElementoId);
         this.ItemsGuardar.splice(index, 1);
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //     this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
         this.spinnerService.hide();
       }
     ).catch(
@@ -711,7 +716,7 @@ export class EditarOrdenesComponent implements OnInit {
     let EmailContacto = this.editarOrdenForm.controls["EmailContacto"].value;
     let Ciudad = this.editarOrdenForm.controls["Ciudad"].value;
     let Paginas = this.editarOrdenForm.controls["Paginas"].value;
-    let JobNumero = this.editarOrdenForm.controls["JobNumero"].value;
+    let JobNumero = this.editarOrdenForm.controls["JobNumero"].value.NumeroJob;
     let DescripcionJob = this.editarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.editarOrdenForm.controls["FechaSolicitud"].value;

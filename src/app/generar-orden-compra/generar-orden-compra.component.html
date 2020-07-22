@@ -94,9 +94,17 @@
                     <mat-card>
                         <div class="row">
                             <div class="col-md-5">
-                                <mat-form-field style="width: 100%">
+                                <mat-form-field>
+                                    <mat-label>JOB N°</mat-label>
+                                    <mat-select formControlName="JobNumero" (selectionChange)="clientes($event)">
+                                        <mat-option *ngFor="let cliente of cliente" [value]="cliente">
+                                          {{cliente.NumeroJob}}                        
+                                        </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                <!-- <mat-form-field style="width: 100%">
                                     <input matInput placeholder="JOB N°" formControlName="JobNumero">
-                                </mat-form-field>
+                                </mat-form-field> -->
                                 <mat-error>
                                     <span *ngIf="!generarOrdenForm.get('JobNumero').valid && generarOrdenForm.get('JobNumero').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                                 </mat-error>
@@ -106,7 +114,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1">Descripción del JOB</label>
-                                    <textarea class="form-control" rows="3" formControlName="DescripcionJob"></textarea>
+                                    <textarea class="form-control" rows="3" formControlName="DescripcionJob" readonly></textarea>
                                     <mat-error>
                                         <span *ngIf="!generarOrdenForm.get('DescripcionJob').valid && generarOrdenForm.get('DescripcionJob').touched"><small class="form-text">Este campo debe estar diligenciado</small></span>
                                     </mat-error>
@@ -135,7 +143,7 @@
                                     <mat-form-field style="width: 100%">
                                         <mat-label>Nombre</mat-label>
                                         <mat-select formControlName="NombreCECO" (selectionChange)="seleccionarCECO($event)">
-                                            <mat-option *ngFor="let item of CentroCosto" [value]="item.centroCosto">
+                                            <mat-option *ngFor="let item of CentroCosto" [value]="item">
                                                 {{item.nombre}}
                                             </mat-option>
                                         </mat-select>
@@ -310,7 +318,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of ItemsGuardar">
+                                <tr *ngFor="let item of ItemsGuardar; let num = index">
                                     <td>{{item.Title}}</td>
                                     <td>{{item.Elemento}}</td>
                                     <td>{{item.Especificaciones}}</td>
@@ -318,7 +326,7 @@
                                     <td>{{item.ValorUnitario | number:'.2'}}</td>
                                     <td>{{item.ValorTotal | number:'.2'}}</td>
                                     <td>
-                                        <button class="btnBorrar" (click)="eliminarItem(item.numeroId)"><i class="fa fa-close"></i></button>
+                                        <button class="btnBorrar" (click)="eliminarItem(num)"><i class="fa fa-close"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -380,8 +388,7 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field style="width: 100%">
-                    <input matInput placeholder="VALOR UNITARIO" [(ngModel)]="ValorUnitario" currencyMask
-                    [options]="{ prefix: ' ', thousands: '.', decimal: ',', align: 'left' , allowNegative: false, precision: 2 }">
+                    <input matInput placeholder="VALOR UNITARIO" [(ngModel)]="ValorUnitario" currencyMask [options]="{ prefix: ' ', thousands: '.', decimal: ',', align: 'left' , allowNegative: false, precision: 2 }">
                 </mat-form-field>
                 <mat-error>
                     <span *ngIf="validarValorUnitario"><small class="form-text">Este campo debe estar diligenciado</small></span>

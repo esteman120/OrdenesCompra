@@ -57,6 +57,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   IdRegConfiguracionApp: any;
   filteredOptions: Observable<string[]>;
   minDate: Date;
+  cliente = [];
 
   constructor(
     private servicio: SPServicio,
@@ -122,6 +123,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     });        
     this.ObtenerUsuarioActual();
     this.ObtenerEmpresasAraujo();
+    this.ObtenerProyectos();
 
       
 
@@ -224,6 +226,21 @@ export class GenerarOrdenCompraComponent implements OnInit {
     });
   }
 
+  ObtenerProyectos() {
+    this.servicio.obtenerProyectosJobs().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.cliente = respuesta;
+      }
+    )
+  }
+
+  clientes($event) {
+    let titulo = $event.value.Title
+    console.log($event)
+    this.generarOrdenForm.controls['DescripcionJob'].setValue(titulo)
+  }
+
   MostrarExitoso(mensaje: string) {
     this.toastr.successToastr(mensaje, 'Confirmación!');
   }
@@ -259,7 +276,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.generarOrdenForm.controls["CECO"].setValue(item.value);
+    this.generarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
   }
 
   SeleccionIva(item){
@@ -269,22 +286,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.PorcentajeIvaUtilizar = this.PorcentajeIva;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     } else {      
       this.TieneIva = false;
       this.PorcentajeIvaUtilizar = 0;
       if (this.ItemsGuardar.length>0) {
         this.calcularIva();
-        // this.ItemsGuardar.map(x=>{
-        //   this.Total = this.Total + x.ValorTotal;
-        // });
-        // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-        // this.Subtotal = this.Total - this.Iva;
       }
     }
   }  
@@ -304,7 +311,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.validarNJOB = false;
     this.validarPorcentajeCECO = false;
 
-    let NombreCECO = this.generarOrdenForm.controls["NombreCECO"].value;
+    let ObjCECO = this.generarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.generarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.generarOrdenForm.controls["NumeroJobCECO"].value;
     let PorcentajeAsumidoCECO = this.generarOrdenForm.controls["PorcentajeAsumidoCECO"].value;
@@ -315,7 +322,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       return false;
     }
 
-    if (NombreCECO === "") {
+    if (ObjCECO === "") {
       this.validarNombreCECO = true;
       this.spinnerService.hide(); 
       return false;
@@ -336,7 +343,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     }
 
     // NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
-    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === NombreCECO);
+    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
@@ -468,17 +475,12 @@ export class GenerarOrdenCompraComponent implements OnInit {
     this.Total = this.Subtotal + this.Iva;    
   }
 
-  eliminarItem(ElementoId) {
+  eliminarItem(index) {
     this.spinnerService.show();
     this.Total = 0;    
-    let index = this.ItemsGuardar.findIndex(x=>x.id === ElementoId);
+    // let index = this.ItemsGuardar.findIndex(x=>x.numeroId === ElementoId);
     this.ItemsGuardar.splice(index, 1);
     this.calcularIva();
-    // this.ItemsGuardar.map(x=>{
-    //     this.Total = this.Total + x.ValorTotal;
-    // });
-    // this.Iva = this.Total * (this.PorcentajeIvaUtilizar/100);
-    // this.Subtotal = this.Total - this.Iva;
     this.spinnerService.hide();
   }
 
@@ -604,7 +606,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let EmailContacto = this.generarOrdenForm.controls["EmailContacto"].value;
     let Ciudad = this.generarOrdenForm.controls["Ciudad"].value;
     let Paginas = this.generarOrdenForm.controls["Paginas"].value;
-    let JobNumero = this.generarOrdenForm.controls["JobNumero"].value;
+    let JobNumero = this.generarOrdenForm.controls["JobNumero"].value.NumeroJob;
     let DescripcionJob = this.generarOrdenForm.controls["DescripcionJob"].value;
     let Reembolsable = this.Reembolso;
     let FechaSolicitud = this.generarOrdenForm.controls["FechaSolicitud"].value;
