@@ -131,8 +131,8 @@
                                     <mat-form-field style="width: 100%">
                                         <mat-label>Nombre</mat-label>
                                         <mat-select formControlName="NombreCECO" (selectionChange)="seleccionarCECO($event)" [disabled]="SoloLectura">
-                                            <mat-option *ngFor="let item of CentroCosto" [value]="item">
-                                                {{item.nombre}}
+                                            <mat-option *ngFor="let item of unegocios" [value]="item">
+                                                <b>{{item.Director.Title}}</b> - {{item.Title}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
