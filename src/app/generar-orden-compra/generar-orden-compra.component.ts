@@ -22,7 +22,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   modalRef: BsModalRef;
   panelOpenState = false;
   panelOpenState1 = false;
-  CentroCosto: centroCostos[];
+  // CentroCosto: centroCostos[];
   participacion: any[] = [];
   validarNombreCECO: boolean;
   validarCECO: boolean;
@@ -58,6 +58,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   minDate: Date;
   cliente = [];
+  unegocios = [];
+  infoEmpleado = [];
 
   constructor(
     private servicio: SPServicio,
@@ -163,11 +165,13 @@ export class GenerarOrdenCompraComponent implements OnInit {
 
   ObtenerUsuarioActual() {
     this.servicio.ObtenerUsuarioActual().subscribe(
-      (respuesta) => {
+      async (respuesta) => {
         this.usuarioActual = new Usuario(respuesta.Title, respuesta.Email, respuesta.Id);        
         this.SolicitadoPor = this.usuarioActual.id;
-        this.servicio.obtenerJefe(this.usuarioActual.id).then(
+        await this.servicio.obtenerJefe(this.usuarioActual.id).then(
           (res)=>{
+            console.log(res);
+            this.infoEmpleado = res;
             
             if (res[0].JefeId !== null) {
               this.usuarioActual.IdJefeDirecto = res[0].JefeId;
@@ -176,7 +180,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
               console.log(this.usuarioActual.EmailJefeDirecto);
             }
             this.usuarioActual.Area = res[0].Area;
-            this.obtenerCentroCostos();
+            // this.obtenerCentroCostos();
+            this.obtenerUnegocios();
           }
         ).catch(
           (error)=>{
@@ -191,19 +196,40 @@ export class GenerarOrdenCompraComponent implements OnInit {
     )
   }
 
-  obtenerCentroCostos(): any {
-    this.servicio
-      .ObtenerCentroCosto()
-      .then(res => {
-        this.CentroCosto = centroCostos.fromJsonList(res);
-        console.log(this.CentroCosto);
-        this.obtenerConfiguracion();        
-      })
-      .catch(error => {
-        this.mostrarError("Se ha producido un error al cargar los centros de costos");
-        console.log(error);
-      });
+  obtenerUnegocios() {
+    this.servicio.obtenerUnegocio().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.unegocios = respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1) //Unegocios.fromJsonList(respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1));
+        console.log(this.unegocios);
+        this.valoresXdefecto(parseInt(this.infoEmpleado[0].UnidadNegocio))
+      }
+    )
   }
+
+  valoresXdefecto(idUnidad) {
+    // this.disabled = true;
+    let unidad: Object;
+    unidad = this.unegocios.filter((x) => x.Id === idUnidad)
+    console.log(unidad[0]);
+    this.generarOrdenForm.controls['NombreCECO'].setValue(unidad[0]);
+    this.generarOrdenForm.controls['CECO'].setValue(unidad[0].Ceco);
+    // this.generarOrdenServicios.controls['numeroCECO'].setValue(unidad[0].Ceco);
+  }
+
+  // obtenerCentroCostos(): any {
+  //   this.servicio
+  //     .ObtenerCentroCosto()
+  //     .then(res => {
+  //       this.CentroCosto = centroCostos.fromJsonList(res);
+  //       console.log(this.CentroCosto);
+  //       this.obtenerConfiguracion();        
+  //     })
+  //     .catch(error => {
+  //       this.mostrarError("Se ha producido un error al cargar los centros de costos");
+  //       console.log(error);
+  //     });
+  // }
 
   obtenerConfiguracion(): any {
     this.servicio.ObtenerConfiguracionApp().then(
@@ -276,7 +302,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.generarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
+    this.generarOrdenForm.controls["CECO"].setValue(item.value.Ceco);
   }
 
   SeleccionIva(item){
@@ -343,7 +369,9 @@ export class GenerarOrdenCompraComponent implements OnInit {
     }
 
     // NombreCECO = this.CentroCosto.find(x => x.centroCosto === NombreCECO).nombre;
-    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
+    let ObjCeco = this.unegocios.find((x) => x.Title === ObjCECO.Title && x.Director.Title === ObjCECO.Director.Title)
+    // console.log(ObjCeco);
+    // let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
@@ -358,14 +386,16 @@ export class GenerarOrdenCompraComponent implements OnInit {
     let objParticipacion = {
       id: Math.floor(Math.random() * 11),
       ceco: CECO,
-      nombre: ObjCeco.nombre,
+      nombre: ObjCeco.Director.Title,
       Njob: NumeroJobCECO,
       asumido: PorcentajeAsumidoCECO,
-      directorId: ObjCeco.DirectorCeco,
-      nombreDirector: ObjCeco.nombreDirector
+      directorId: ObjCeco.Director.ID,
+      nombreDirector: ObjCeco.Director.Title,
+      emailDirector: ObjCeco.Director.EMail
     };
-    // console.log(objParticipacion.nombreDirector);
+    // console.log(objParticipacion);
     this.participacion.push(objParticipacion);
+    console.log(this.participacion);
     this.generarOrdenForm.controls["NombreCECO"].setValue("");
     this.generarOrdenForm.controls["CECO"].setValue("");
     this.generarOrdenForm.controls["NumeroJobCECO"].setValue("");
@@ -657,10 +687,11 @@ export class GenerarOrdenCompraComponent implements OnInit {
       Total: Total,
       NombreSolicitanteId: this.SolicitadoPor,
       JefeDirectoId: this.usuarioActual.IdJefeDirecto,
-      ResponsableActualId: this.usuarioActual.IdJefeDirecto,
+      ResponsableActualId: this.participacion[0].directorId,
       EmpresaSolicitante: EmpresaSolicitante.RazonSocial,
       Consecutivo: Consecutivo
-    }    
+    }
+    console.log(objOrden);    
     
     this.servicio.guardarOrden(objOrden).then(
       (itemsResult: ItemAddResult)=>{
@@ -671,7 +702,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
             TipoServicio: "Orden de compra",
             CodigoServicioId: 3,
             AutorId: this.SolicitadoPor,
-            ResponsableActualId: this.usuarioActual.IdJefeDirecto,
+            ResponsableActualId: this.participacion[0].directorId,
             Estado: "En revisión del Jefe",
             idServicio: idOrden
           } 
@@ -752,7 +783,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
                             '<p>Para ver la orden de compra haga clic <a href="https://aribasas.sharepoint.com/sites/apps/SiteAssets/Orden-Compra/index.aspx/Ordenes-pendientes" target="_blank">aquí</a>.</p>';
 
           const emailProps: EmailProperties = {
-            To: [this.usuarioActual.EmailJefeDirecto],
+            To: [this.participacion[0].emailDirector],
             Subject: "Notificación de orden de compra",
             Body: TextoCorreo,
           };

@@ -25,7 +25,7 @@ export class EditarOrdenesComponent implements OnInit {
   modalRef: BsModalRef;
   panelOpenState = false;
   panelOpenState1 = false;
-  CentroCosto: centroCostos[];
+  // CentroCosto: centroCostos[];
   validarNombreCECO: boolean;
   validarCECO: boolean;
   validarNJOB: boolean;
@@ -60,7 +60,8 @@ export class EditarOrdenesComponent implements OnInit {
   nombreUsuario: any;
   nombreGerente: any;
   nombreJefe: any;
-  participacion: Participacion[];
+  participacion = [];
+  // participacion: Participacion[];
   emailJefe: any;
   emailUsuario: any;
   emailGerente: any;
@@ -80,6 +81,7 @@ export class EditarOrdenesComponent implements OnInit {
   NJob: any;
   cliente = [];
   clienteXdefecto: any[];
+  unegocios = [];
 
   constructor(
     private servicio: SPServicio,
@@ -190,7 +192,8 @@ export class EditarOrdenesComponent implements OnInit {
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
     await this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       async (respuesta)=>{
-        this.obtenerCentroCostos();
+        // this.obtenerCentroCostos();
+        this.obtenerUnegocios();
         this.ObjOrdenCompra = respuesta;
         console.log(this.ObjOrdenCompra);
         console.log(2)
@@ -265,7 +268,9 @@ export class EditarOrdenesComponent implements OnInit {
   obtenerParticipacion(): any {
     this.servicio.obtenerParticipacion(this.idOrdenCompra).then(
       (res)=>{
-          this.participacion = Participacion.fromJsonList(res);
+        this.participacion = res;
+        console.log(this.participacion);
+          // this.participacion = Participacion.fromJsonList(res);
       }
     ).catch(
       (error)=>{
@@ -344,19 +349,30 @@ export class EditarOrdenesComponent implements OnInit {
     )
   }
 
-  obtenerCentroCostos(): any {
-    this.servicio
-      .ObtenerCentroCosto()
-      .then(res => {
-        this.CentroCosto = centroCostos.fromJsonList(res);
-        this.obtenerConfiguracion(); 
-        this.spinnerService.hide();
-      })
-      .catch(error => {
-        this.mostrarError("SE ha producido un error al cargar los centros de costos");
-        console.log(error);
-      });
+  obtenerUnegocios() {
+    this.servicio.obtenerUnegocio().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.unegocios = respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1) //Unegocios.fromJsonList(respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1));
+        console.log(this.unegocios);
+        // this.valoresXdefecto(parseInt(this.infoEmpleado[0].UnidadNegocio))
+      }
+    )
   }
+
+  // obtenerCentroCostos(): any {
+  //   this.servicio
+  //     .ObtenerCentroCosto()
+  //     .then(res => {
+  //       this.CentroCosto = centroCostos.fromJsonList(res);
+  //       this.obtenerConfiguracion(); 
+  //       this.spinnerService.hide();
+  //     })
+  //     .catch(error => {
+  //       this.mostrarError("SE ha producido un error al cargar los centros de costos");
+  //       console.log(error);
+  //     });
+  // }
 
   obtenerConfiguracion(): any {
     this.servicio.ObtenerConfiguracionApp().then(
@@ -432,7 +448,8 @@ export class EditarOrdenesComponent implements OnInit {
       return false;
     }
 
-    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
+    let ObjCeco = this.unegocios.find((x) => x.Title === ObjCECO.Title && x.Director.Title === ObjCECO.Director.Title);
+    // let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
@@ -449,9 +466,12 @@ export class EditarOrdenesComponent implements OnInit {
     let objParticipacion = {  
       id: "",    
       ceco: CECO,
-      nombre: ObjCeco.nombre,
+      nombre: ObjCeco.Director.Title,
       Njob: NumeroJobCECO,
-      asumido: PorcentajeAsumidoCECO
+      asumido: PorcentajeAsumidoCECO,
+      directorId: ObjCeco.Director.ID,
+      nombreDirector: ObjCeco.Director.Title,
+      emailDirector: ObjCeco.Director.EMail
     };
 
     this.GuardarParticipacion(objParticipacion);    
@@ -751,14 +771,14 @@ export class EditarOrdenesComponent implements OnInit {
       Subtotal: Subtotal,
       iva: Iva,
       Total: Total,
-      ResponsableActualId: this.idJefe,
+      ResponsableActualId: this.participacion[0].directorId,
       CodigoEstado: 2,
       Estado: "En revisión del Jefe"
     }
     
     this.servicio.modificarOrden(this.idOrdenCompra, objOrden).then(
       (res)=>{
-        this.ResponsableSiguiente = this.idJefe;
+        this.ResponsableSiguiente = this.participacion[0].directorId                     //this.idJefe;
         this.EstadoSiguiente = "En revisión del Jefe";
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
@@ -768,7 +788,7 @@ export class EditarOrdenesComponent implements OnInit {
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
-          aQuien: [this.emailJefe]
+          aQuien: [this.participacion[0].emailDirector]
         }
         this.enviarNotificacion(ObjCorreo);
       }      
