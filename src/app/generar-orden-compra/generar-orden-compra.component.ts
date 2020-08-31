@@ -152,6 +152,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   seleccionarEmpresa(event){
+    console.log(event)
     let consecutivo = event.value.TipoConsecutivo;
     this.TipoConsecutivo = consecutivo;
     if (consecutivo === "Consultores") {
@@ -203,6 +204,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
         this.unegocios = respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1) //Unegocios.fromJsonList(respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1));
         console.log(this.unegocios);
         this.valoresXdefecto(parseInt(this.infoEmpleado[0].UnidadNegocio))
+        this.obtenerConfiguracion();
       }
     )
   }
@@ -223,7 +225,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
   //     .then(res => {
   //       this.CentroCosto = centroCostos.fromJsonList(res);
   //       console.log(this.CentroCosto);
-  //       this.obtenerConfiguracion();        
+  //               
   //     })
   //     .catch(error => {
   //       this.mostrarError("Se ha producido un error al cargar los centros de costos");
