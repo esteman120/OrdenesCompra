@@ -645,7 +645,7 @@ export class VerOrdenCompraComponent implements OnInit {
           aQuien: [this.emailGerente]
         } 
         let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
-        let IdParticipacion = ObjCeco2[0].id;
+        let IdParticipacion = ObjCeco[0].id;
         let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);       
       } 
