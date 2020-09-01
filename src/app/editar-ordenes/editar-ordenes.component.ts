@@ -60,8 +60,8 @@ export class EditarOrdenesComponent implements OnInit {
   nombreUsuario: any;
   nombreGerente: any;
   nombreJefe: any;
-  participacion = [];
-  // participacion: Participacion[];
+  // participacion = [];
+  participacion: Participacion[];
   emailJefe: any;
   emailUsuario: any;
   emailGerente: any;
@@ -268,9 +268,9 @@ export class EditarOrdenesComponent implements OnInit {
   obtenerParticipacion(): any {
     this.servicio.obtenerParticipacion(this.idOrdenCompra).then(
       (res)=>{
-        this.participacion = res;
+        // this.participacion = res;
+        this.participacion = Participacion.fromJsonList(res);
         console.log(this.participacion);
-          // this.participacion = Participacion.fromJsonList(res);
       }
     ).catch(
       (error)=>{
@@ -469,9 +469,9 @@ export class EditarOrdenesComponent implements OnInit {
       nombre: ObjCeco.Director.Title,
       Njob: NumeroJobCECO,
       asumido: PorcentajeAsumidoCECO,
-      directorId: ObjCeco.Director.ID,
-      nombreDirector: ObjCeco.Director.Title,
-      emailDirector: ObjCeco.Director.EMail
+      idDirectorCECO: ObjCeco.Director.ID,
+      // nombreDirector: ObjCeco.Director.Title,
+      EmailDirector: ObjCeco.Director.EMail
     };
 
     this.GuardarParticipacion(objParticipacion);    
@@ -771,14 +771,14 @@ export class EditarOrdenesComponent implements OnInit {
       Subtotal: Subtotal,
       iva: Iva,
       Total: Total,
-      ResponsableActualId: this.participacion[0].directorId,
+      ResponsableActualId: this.participacion[0].idDirectorCECO,
       CodigoEstado: 2,
       Estado: "En revisión del Jefe"
     }
     
     this.servicio.modificarOrden(this.idOrdenCompra, objOrden).then(
       (res)=>{
-        this.ResponsableSiguiente = this.participacion[0].directorId                     //this.idJefe;
+        this.ResponsableSiguiente = this.participacion[0].idDirectorCECO                     //this.idJefe;
         this.EstadoSiguiente = "En revisión del Jefe";
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
@@ -788,7 +788,7 @@ export class EditarOrdenesComponent implements OnInit {
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
-          aQuien: [this.participacion[0].emailDirector]
+          aQuien: [this.participacion[0].EmailDirector]
         }
         this.enviarNotificacion(ObjCorreo);
       }      
