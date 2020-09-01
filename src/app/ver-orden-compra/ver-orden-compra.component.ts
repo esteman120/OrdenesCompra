@@ -597,9 +597,9 @@ export class VerOrdenCompraComponent implements OnInit {
   }
   
   async MetodoAprobacionCECO(): Promise<any> {
-    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false && x.idDirectorCECO !== this.usuarioActual.id);
-      if (ObjCeco.length > 0) {
-        // let IdParticipacion = ObjCeco[0].id;
+    let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);  //&& x.idDirectorCECO !== this.usuarioActual.id
+      if (ObjCeco.length > 1) {
+        let IdParticipacion = ObjCeco[0].id;
         let NombreCeco = ObjCeco[0].nombre;
         let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
         let EmailDirector = ObjCeco[0].EmailDirector;
@@ -621,8 +621,8 @@ export class VerOrdenCompraComponent implements OnInit {
           TextoCorreo: TextoCorreo,
           aQuien: [EmailDirector]
         }
-        let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
-        let IdParticipacion = ObjCeco2[0].id;
+        // let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
+        // let IdParticipacion = ObjCeco2[0].id;
         let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);
       }
@@ -647,7 +647,7 @@ export class VerOrdenCompraComponent implements OnInit {
           aQuien: [this.emailGerente]
         } 
         let ObjCeco2 = this.participacion.filter((x)=> x.idDirectorCECO === this.usuarioActual.id);
-        let IdParticipacion = ObjCeco2[0].id;
+        let IdParticipacion = ObjCeco[0].id;
         let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);       
       } 
@@ -656,16 +656,36 @@ export class VerOrdenCompraComponent implements OnInit {
   async MetodoAprovacionJefe(): Promise<any> {
     let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
       if (ObjCeco.length > 0) {
+        let IdDirectorCeco;
+        let NombreCeco;
+        let EmailDirector;
+        let EstadoSiguiente;
+        let CodigoEstado;
+        let GerenteAdminId;
+        if(this.participacion.length > 1) {
+          IdDirectorCeco = ObjCeco[1].idDirectorCECO;
+          NombreCeco = ObjCeco[1].nombre;
+          EmailDirector = ObjCeco[1].EmailDirector
+          EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+          CodigoEstado = 7;
+          GerenteAdminId = null;
+        }
+        else {
+          IdDirectorCeco = this.idGerente;
+          NombreCeco = ObjCeco[0].nombre;
+          EmailDirector = ObjCeco[0].EmailDirector;
+          EstadoSiguiente = "En revisión del gerente";
+          CodigoEstado = 3;
+          GerenteAdminId = this.idGerente
+        }
         let IdParticipacion = ObjCeco[0].id;
-        let NombreCeco = ObjCeco[0].nombre;
-        let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
-        let EmailDirector = ObjCeco[0].EmailDirector;
-        this.EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+        this.EstadoSiguiente = EstadoSiguiente;
         this.ResponsableSiguiente = IdDirectorCeco;
         let objAprobar = {
           Estado: this.EstadoSiguiente,
-          CodigoEstado: 7,
-          ResponsableActualId: this.ResponsableSiguiente
+          CodigoEstado,
+          ResponsableActualId: this.ResponsableSiguiente,
+          GerenteAdminId
         }
 
         let TextoCorreo = '<p>Cordial saludo</p>'+
