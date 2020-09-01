@@ -9,7 +9,6 @@ import { ToastrManager } from 'ng6-toastr-notifications';
 import { ActivatedRoute, Router} from '@angular/router';
 import { Usuario } from '../Entidades/usuario';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
-import { element } from 'protractor';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -688,7 +687,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       iva: Iva,
       Total: Total,
       NombreSolicitanteId: this.SolicitadoPor,
-      JefeDirectoId: this.usuarioActual.IdJefeDirecto,
+      JefeDirectoId: this.participacion[0].directorId,                  //this.usuarioActual.IdJefeDirecto
       ResponsableActualId: this.participacion[0].directorId,
       EmpresaSolicitante: EmpresaSolicitante.RazonSocial,
       Consecutivo: Consecutivo
@@ -708,7 +707,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
             Estado: "En revisión del Jefe",
             idServicio: idOrden
           } 
-          if (this.participacion.length>0) {
+          if (this.participacion.length > 0) {
             this.GuardarParticipacion(idOrden, objServicio);
           } 
           else {
@@ -724,23 +723,41 @@ export class GenerarOrdenCompraComponent implements OnInit {
   }
 
   GuardarParticipacion(idOrden: any, objServicio): any {
-    let contador =0;
-    this.participacion.forEach(element=>{
-      this.servicio.GuardarParticipacion(element, idOrden).then(
-          (resultado)=>{
-            contador++;
-            if (contador === this.participacion.length) {              
-              this.GuardarItemsOrden(idOrden, objServicio);
-            }
+    let index: number;
+    this.participacion.length >= 2 ? index = 1 : index = 0;
+    let contador = 0;
+    for (let i = 0; i < this.participacion.length; i++) {
+      this.servicio.GuardarParticipacion(this.participacion[i], idOrden).then(
+        (resultado) => {
+          contador++;
+          if (contador === this.participacion.length - 1) {
+            this.GuardarItemsOrden(idOrden, objServicio);
           }
+        }
       ).catch(
-        (error)=>{
+        (error) => {
           this.mostrarError("Se ha producido un error al guardar la orden");
           console.log(error);
           this.spinnerService.hide();
         }
       );
-    });    
+    }
+    // this.participacion.forEach(element=>{
+    //   this.servicio.GuardarParticipacion(element, idOrden).then(
+    //       (resultado)=>{
+    //         contador++;
+    //         if (contador === this.participacion.length) {              
+    //           this.GuardarItemsOrden(idOrden, objServicio);
+    //         }
+    //       }
+    //   ).catch(
+    //     (error)=>{
+    //       this.mostrarError("Se ha producido un error al guardar la orden");
+    //       console.log(error);
+    //       this.spinnerService.hide();
+    //     }
+    //   );
+    // });    
   }
 
  async GuardarItemsOrden(idOrden, objServicio){
@@ -752,7 +769,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
         (resultado: ItemAddResult)=>{
           contador++;
             if (contador === this.ItemsGuardar.length) {              
-              if (this.usuarioActual.IdJefeDirecto !== -1) {
+              if (this.participacion[0].directorId) {                                   //this.usuarioActual.IdJefeDirecto !== -1
                 this.guardarServicio(objServicio); 
               }
               else{
