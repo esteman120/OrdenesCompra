@@ -654,9 +654,11 @@ export class VerOrdenCompraComponent implements OnInit {
   async MetodoAprovacionJefe(): Promise<any> {
     let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
       if (ObjCeco.length > 0) {
+        let IdDirectorCeco;
+        this.participacion.length > 1 ? IdDirectorCeco = ObjCeco[1].idDirectorCECO : IdDirectorCeco = this.idGerente
         let IdParticipacion = ObjCeco[0].id;
         let NombreCeco = ObjCeco[0].nombre;
-        let IdDirectorCeco = ObjCeco[0].idDirectorCECO;
+       
         let EmailDirector = ObjCeco[0].EmailDirector;
         this.EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
         this.ResponsableSiguiente = IdDirectorCeco;
