@@ -443,7 +443,7 @@ export class EditarOrdenesComponent implements OnInit {
     //   this.validarNJOB = true;
     //   return false;
     // }
-    if (PorcentajeAsumidoCECO === "") {
+    if (PorcentajeAsumidoCECO === "" || PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
       this.validarPorcentajeCECO = true;
       return false;
     }
