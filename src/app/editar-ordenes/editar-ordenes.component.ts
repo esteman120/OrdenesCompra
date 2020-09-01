@@ -427,9 +427,9 @@ export class EditarOrdenesComponent implements OnInit {
     let ObjCECO = this.editarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.editarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.editarOrdenForm.controls["NumeroJobCECO"].value;
-    let PorcentajeAsumidoCECO = parseInt(this.editarOrdenForm.controls[
+    let PorcentajeAsumidoCECO = this.editarOrdenForm.controls[
       "PorcentajeAsumidoCECO"
-    ].value);
+    ].value;
 
     if (ObjCECO === "") {
       this.validarNombreCECO = true;
@@ -443,7 +443,7 @@ export class EditarOrdenesComponent implements OnInit {
     //   this.validarNJOB = true;
     //   return false;
     // }
-    if (PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
+    if (PorcentajeAsumidoCECO === '' || PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
       this.validarPorcentajeCECO = true;
       return false;
     }
@@ -454,7 +454,7 @@ export class EditarOrdenesComponent implements OnInit {
     this.participacion.map((x)=>{
       sumaParticipacion = sumaParticipacion + x.asumido;
     });
-    let sumaTotal = sumaParticipacion + PorcentajeAsumidoCECO;
+    let sumaTotal = sumaParticipacion + parseInt(PorcentajeAsumidoCECO);
     if (sumaTotal > 100) {
       this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
       this.spinnerService.hide();; 
