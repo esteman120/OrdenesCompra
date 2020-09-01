@@ -655,16 +655,30 @@ export class VerOrdenCompraComponent implements OnInit {
     let ObjCeco = this.participacion.filter((x)=> x.Aprobado === false);
       if (ObjCeco.length > 0) {
         let IdDirectorCeco;
-        this.participacion.length > 1 ? IdDirectorCeco = ObjCeco[1].idDirectorCECO : IdDirectorCeco = this.idGerente
+        let NombreCeco;
+        let EmailDirector;
+        let EstadoSiguiente;
+        let CodigoEstado;
+        if(this.participacion.length > 1) {
+          IdDirectorCeco = ObjCeco[1].idDirectorCECO;
+          NombreCeco = ObjCeco[1].nombre;
+          EmailDirector = ObjCeco[1].EmailDirector
+          EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+          CodigoEstado = 3
+        }
+        else {
+          IdDirectorCeco = this.idGerente;
+          NombreCeco = ObjCeco[0].nombre;
+          EmailDirector = ObjCeco[0].EmailDirector;
+          EstadoSiguiente = "En revisión del gerente";
+          CodigoEstado = 7;
+        }
         let IdParticipacion = ObjCeco[0].id;
-        let NombreCeco = ObjCeco[0].nombre;
-       
-        let EmailDirector = ObjCeco[0].EmailDirector;
-        this.EstadoSiguiente = "En revisión del director del CECO "+ NombreCeco;
+        this.EstadoSiguiente = EstadoSiguiente;
         this.ResponsableSiguiente = IdDirectorCeco;
         let objAprobar = {
           Estado: this.EstadoSiguiente,
-          CodigoEstado: 7,
+          CodigoEstado,
           ResponsableActualId: this.ResponsableSiguiente
         }
 
