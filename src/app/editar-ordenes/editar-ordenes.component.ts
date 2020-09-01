@@ -137,7 +137,7 @@ export class EditarOrdenesComponent implements OnInit {
       NombreCECO: [""],
       CECO: [""],
       NumeroJobCECO: [""],
-      PorcentajeAsumidoCECO: [""],
+      PorcentajeAsumidoCECO: ["", Validators.required],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: [""],

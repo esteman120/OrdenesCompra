@@ -690,7 +690,8 @@ export class GenerarOrdenCompraComponent implements OnInit {
       JefeDirectoId: this.participacion[0].directorId,                  //this.usuarioActual.IdJefeDirecto
       ResponsableActualId: this.participacion[0].directorId,
       EmpresaSolicitante: EmpresaSolicitante.RazonSocial,
-      Consecutivo: Consecutivo
+      Consecutivo: Consecutivo,
+      Estado: "En revisión del Jefe"
     }
     console.log(objOrden);    
     
