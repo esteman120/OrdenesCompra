@@ -452,7 +452,8 @@ export class EditarOrdenesComponent implements OnInit {
     // let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
-      sumaParticipacion = sumaParticipacion + x.asumido;
+      let asumido: any = x.asumido
+      sumaParticipacion = sumaParticipacion + parseInt(asumido);
     });
     let sumaTotal = sumaParticipacion + parseInt(PorcentajeAsumidoCECO);
     if (sumaTotal > 100) {
