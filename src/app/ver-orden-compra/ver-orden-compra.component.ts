@@ -678,6 +678,7 @@ export class VerOrdenCompraComponent implements OnInit {
         }
         // let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
         this.modificarOrden(objAprobar, ObjCorreo);
+        let Resp = await this.ActualizarEstadoParticipacion(IdParticipacion, true);
       }
   }
 
