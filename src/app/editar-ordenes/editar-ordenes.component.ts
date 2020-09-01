@@ -182,7 +182,7 @@ export class EditarOrdenesComponent implements OnInit {
 
   async cargarDatosSelectPorDefecto() {
     this.clienteXdefecto = await this.cliente.filter(x => {
-    return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
+      if(this.ObjOrdenCompra.JobNumero) return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
    })
  }
  
@@ -209,7 +209,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
         (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
-        // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
+        this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
@@ -427,9 +427,9 @@ export class EditarOrdenesComponent implements OnInit {
     let ObjCECO = this.editarOrdenForm.controls["NombreCECO"].value;
     let CECO = this.editarOrdenForm.controls["CECO"].value;
     let NumeroJobCECO = this.editarOrdenForm.controls["NumeroJobCECO"].value;
-    let PorcentajeAsumidoCECO = this.editarOrdenForm.controls[
+    let PorcentajeAsumidoCECO = parseInt(this.editarOrdenForm.controls[
       "PorcentajeAsumidoCECO"
-    ].value;
+    ].value);
 
     if (ObjCECO === "") {
       this.validarNombreCECO = true;
@@ -443,7 +443,7 @@ export class EditarOrdenesComponent implements OnInit {
     //   this.validarNJOB = true;
     //   return false;
     // }
-    if (PorcentajeAsumidoCECO === "" || PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
+    if (PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
       this.validarPorcentajeCECO = true;
       return false;
     }
