@@ -25,7 +25,7 @@ export class EditarOrdenesComponent implements OnInit {
   modalRef: BsModalRef;
   panelOpenState = false;
   panelOpenState1 = false;
-  CentroCosto: centroCostos[];
+  // CentroCosto: centroCostos[];
   validarNombreCECO: boolean;
   validarCECO: boolean;
   validarNJOB: boolean;
@@ -60,6 +60,7 @@ export class EditarOrdenesComponent implements OnInit {
   nombreUsuario: any;
   nombreGerente: any;
   nombreJefe: any;
+  // participacion = [];
   participacion: Participacion[];
   emailJefe: any;
   emailUsuario: any;
@@ -80,6 +81,7 @@ export class EditarOrdenesComponent implements OnInit {
   NJob: any;
   cliente = [];
   clienteXdefecto: any[];
+  unegocios = [];
 
   constructor(
     private servicio: SPServicio,
@@ -135,7 +137,7 @@ export class EditarOrdenesComponent implements OnInit {
       NombreCECO: [""],
       CECO: [""],
       NumeroJobCECO: [""],
-      PorcentajeAsumidoCECO: [""],
+      PorcentajeAsumidoCECO: ["", Validators.required],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: [""],
@@ -180,7 +182,7 @@ export class EditarOrdenesComponent implements OnInit {
 
   async cargarDatosSelectPorDefecto() {
     this.clienteXdefecto = await this.cliente.filter(x => {
-    return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
+      if(this.ObjOrdenCompra.JobNumero) return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
    })
  }
  
@@ -190,7 +192,8 @@ export class EditarOrdenesComponent implements OnInit {
     this.idOrdenCompra = Parametro["id"].substring(12, Parametro["id"].length);
     await this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       async (respuesta)=>{
-        this.obtenerCentroCostos();
+        // this.obtenerCentroCostos();
+        this.obtenerUnegocios();
         this.ObjOrdenCompra = respuesta;
         console.log(this.ObjOrdenCompra);
         console.log(2)
@@ -206,7 +209,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
         (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
-        // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
+        this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
@@ -265,7 +268,9 @@ export class EditarOrdenesComponent implements OnInit {
   obtenerParticipacion(): any {
     this.servicio.obtenerParticipacion(this.idOrdenCompra).then(
       (res)=>{
-          this.participacion = Participacion.fromJsonList(res);
+        // this.participacion = res;
+        this.participacion = Participacion.fromJsonList(res);
+        console.log(this.participacion);
       }
     ).catch(
       (error)=>{
@@ -344,19 +349,30 @@ export class EditarOrdenesComponent implements OnInit {
     )
   }
 
-  obtenerCentroCostos(): any {
-    this.servicio
-      .ObtenerCentroCosto()
-      .then(res => {
-        this.CentroCosto = centroCostos.fromJsonList(res);
-        this.obtenerConfiguracion(); 
-        this.spinnerService.hide();
-      })
-      .catch(error => {
-        this.mostrarError("SE ha producido un error al cargar los centros de costos");
-        console.log(error);
-      });
+  obtenerUnegocios() {
+    this.servicio.obtenerUnegocio().subscribe(
+      (respuesta) => {
+        console.log(respuesta);
+        this.unegocios = respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1) //Unegocios.fromJsonList(respuesta.sort((a, b)=> (a.Title > b.Title) ? 1 : -1));
+        console.log(this.unegocios);
+        // this.valoresXdefecto(parseInt(this.infoEmpleado[0].UnidadNegocio))
+      }
+    )
   }
+
+  // obtenerCentroCostos(): any {
+  //   this.servicio
+  //     .ObtenerCentroCosto()
+  //     .then(res => {
+  //       this.CentroCosto = centroCostos.fromJsonList(res);
+  //       this.obtenerConfiguracion(); 
+  //       this.spinnerService.hide();
+  //     })
+  //     .catch(error => {
+  //       this.mostrarError("SE ha producido un error al cargar los centros de costos");
+  //       console.log(error);
+  //     });
+  // }
 
   obtenerConfiguracion(): any {
     this.servicio.ObtenerConfiguracionApp().then(
@@ -381,7 +397,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   seleccionarCECO(item) {
-    this.editarOrdenForm.controls["CECO"].setValue(item.value.centroCosto);
+    this.editarOrdenForm.controls["CECO"].setValue(item.value.Ceco);
   }
 
   SeleccionIva(item){
@@ -427,17 +443,19 @@ export class EditarOrdenesComponent implements OnInit {
     //   this.validarNJOB = true;
     //   return false;
     // }
-    if (PorcentajeAsumidoCECO === "") {
+    if (PorcentajeAsumidoCECO === '' || PorcentajeAsumidoCECO === undefined || PorcentajeAsumidoCECO === null) {
       this.validarPorcentajeCECO = true;
       return false;
     }
 
-    let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
+    let ObjCeco = this.unegocios.find((x) => x.Title === ObjCECO.Title && x.Director.Title === ObjCECO.Director.Title);
+    // let ObjCeco = this.CentroCosto.find(x => x.centroCosto === ObjCECO.centroCosto && x.nombre === ObjCECO.nombre);
     let sumaParticipacion = 0;
     this.participacion.map((x)=>{
-      sumaParticipacion = sumaParticipacion + x.asumido;
+      let asumido: any = x.asumido
+      sumaParticipacion = sumaParticipacion + parseInt(asumido);
     });
-    let sumaTotal = sumaParticipacion + PorcentajeAsumidoCECO;
+    let sumaTotal = sumaParticipacion + parseInt(PorcentajeAsumidoCECO);
     if (sumaTotal > 100) {
       this.mostrarAdvertencia("La suma del procentaje asumido no puede superar el 100%");
       this.spinnerService.hide();; 
@@ -449,9 +467,12 @@ export class EditarOrdenesComponent implements OnInit {
     let objParticipacion = {  
       id: "",    
       ceco: CECO,
-      nombre: ObjCeco.nombre,
+      nombre: ObjCeco.Director.Title,
       Njob: NumeroJobCECO,
-      asumido: PorcentajeAsumidoCECO
+      asumido: PorcentajeAsumidoCECO,
+      idDirectorCECO: ObjCeco.Director.ID,
+      // nombreDirector: ObjCeco.Director.Title,
+      EmailDirector: ObjCeco.Director.EMail
     };
 
     this.GuardarParticipacion(objParticipacion);    
@@ -751,14 +772,14 @@ export class EditarOrdenesComponent implements OnInit {
       Subtotal: Subtotal,
       iva: Iva,
       Total: Total,
-      ResponsableActualId: this.idJefe,
+      ResponsableActualId: this.participacion[0].idDirectorCECO,
       CodigoEstado: 2,
       Estado: "En revisión del Jefe"
     }
     
     this.servicio.modificarOrden(this.idOrdenCompra, objOrden).then(
       (res)=>{
-        this.ResponsableSiguiente = this.idJefe;
+        this.ResponsableSiguiente = this.participacion[0].idDirectorCECO                     //this.idJefe;
         this.EstadoSiguiente = "En revisión del Jefe";
         let TextoCorreo = '<p>Cordial saludo</p>'+
                             '<br>'+
@@ -768,7 +789,7 @@ export class EditarOrdenesComponent implements OnInit {
         
         let ObjCorreo = {
           TextoCorreo: TextoCorreo,
-          aQuien: [this.emailJefe]
+          aQuien: [this.participacion[0].EmailDirector]
         }
         this.enviarNotificacion(ObjCorreo);
       }      
