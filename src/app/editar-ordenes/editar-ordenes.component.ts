@@ -137,7 +137,7 @@ export class EditarOrdenesComponent implements OnInit {
       NombreCECO: [""],
       CECO: [""],
       NumeroJobCECO: [""],
-      PorcentajeAsumidoCECO: ["", Validators.required],
+      PorcentajeAsumidoCECO: [""],
       FechaSolicitud: ["", Validators.required],
       TiempoEntrega: ["", Validators.required],
       RubroPresupuesto: [""],
@@ -208,8 +208,8 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        (this.clienteXdefecto[0].NumeroJob !== null && this.clienteXdefecto[0].NumeroJob !== undefined) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
-        this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
+        (this.ObjOrdenCompra.JobNumero) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob) : this.editarOrdenForm.controls["JobNumero"].setValue('');
+        // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
           this.editarOrdenForm.controls["Reembolsable"].setValue("true");          
