@@ -183,6 +183,7 @@ export class EditarOrdenesComponent implements OnInit {
   async cargarDatosSelectPorDefecto() {
     this.clienteXdefecto = await this.cliente.filter(x => {
       if(this.ObjOrdenCompra.JobNumero) return x.NumeroJob === this.ObjOrdenCompra.JobNumero.toString();
+      console.log(3)
    })
  }
  
@@ -208,7 +209,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.editarOrdenForm.controls["EmailContacto"].setValue(this.ObjOrdenCompra.EmailContacto);
         this.editarOrdenForm.controls["Ciudad"].setValue(this.ObjOrdenCompra.Ciudad);
         this.editarOrdenForm.controls["Paginas"].setValue(this.ObjOrdenCompra.PaginasEnviadas);
-        (this.ObjOrdenCompra.JobNumero) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob) : this.editarOrdenForm.controls["JobNumero"].setValue('');
+        (this.ObjOrdenCompra.JobNumero) ? this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0]) : this.editarOrdenForm.controls["JobNumero"].setValue('');
         // this.editarOrdenForm.controls["JobNumero"].setValue(this.clienteXdefecto[0].NumeroJob);
         this.editarOrdenForm.controls["DescripcionJob"].setValue(this.ObjOrdenCompra.DescripcionJob);
         if (this.ObjOrdenCompra.Reembolsable === true) {
@@ -469,7 +470,7 @@ export class EditarOrdenesComponent implements OnInit {
       ceco: CECO,
       nombre: ObjCeco.Director.Title,
       Njob: NumeroJobCECO,
-      asumido: PorcentajeAsumidoCECO,
+      asumido: parseInt(PorcentajeAsumidoCECO),
       idDirectorCECO: ObjCeco.Director.ID,
       // nombreDirector: ObjCeco.Director.Title,
       EmailDirector: ObjCeco.Director.EMail
