@@ -8,13 +8,14 @@ export const environment = {
   ListaOrdenCompra: 'OrdenCompra',
   ListaItemsOrdenCompra: 'ItemsOrdenCompra',
   ListaPorcentajeUnidades: 'PorcentajeUnidades',
-  ListaEmpleados: 'Empleados',
+  ListaEmpleados: 'EmpleadosNueva',
   ListaCentroCostos: 'CentroCostos',
   ListaServicios: 'Servicios',
   ListaUsuariosAprobadores: 'UsuariosAprobadores',
   ListaConfiguracionApp: 'ConfiguracionAplicaciones',
   ListaEmpresasAraujoIbarra: 'EmpresasAraujoIbarra',
-  ListaProyectos: 'Proyectos'
+  ListaProyectos: 'Proyectos',
+  ListaUnidadNegocio: 'UnidadNegocios'
 };
 
 
