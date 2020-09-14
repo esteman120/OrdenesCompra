@@ -8,7 +8,7 @@ export const environment = {
   ListaOrdenCompra: 'OrdenCompra',
   ListaItemsOrdenCompra: 'ItemsOrdenCompra',
   ListaPorcentajeUnidades: 'PorcentajeUnidades',
-  ListaEmpleados: 'EmpleadosNueva',
+  ListaEmpleados: 'Empleados',
   ListaCentroCostos: 'CentroCostos',
   ListaServicios: 'Servicios',
   ListaUsuariosAprobadores: 'UsuariosAprobadores',
