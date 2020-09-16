@@ -731,7 +731,7 @@ export class GenerarOrdenCompraComponent implements OnInit {
       this.servicio.GuardarParticipacion(this.participacion[i], idOrden).then(
         (resultado) => {
           contador++;
-          if (contador === this.participacion.length - 1) {
+          if (contador === this.participacion.length) {
             this.GuardarItemsOrden(idOrden, objServicio);
           }
         }
