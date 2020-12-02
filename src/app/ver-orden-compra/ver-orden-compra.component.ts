@@ -95,6 +95,7 @@ export class VerOrdenCompraComponent implements OnInit {
   idAuxContable: any;
   firmaAuxContable: any;
   Order: string;
+  empresa: any;
 
   constructor(
     private servicio: SPServicio,
@@ -211,6 +212,7 @@ export class VerOrdenCompraComponent implements OnInit {
     this.servicio.obtenerOrdenCompra(this.idOrdenCompra).then(
       async (respuesta)=>{
         this.ObjOrdenCompra = respuesta;
+        this.empresa = this.ObjOrdenCompra.EmpresaSolicitante
         this.VerOrdenForm.controls["EntidadCompania"].setValue(this.ObjOrdenCompra.Title);
         this.VerOrdenForm.controls["PersonaContacto"].setValue(this.ObjOrdenCompra.PersonaContacto);
         this.VerOrdenForm.controls["TelefonoContacto"].setValue(this.ObjOrdenCompra.TelefonoContacto);
@@ -279,7 +281,7 @@ export class VerOrdenCompraComponent implements OnInit {
   }
 
   ObtenerDO(): any {
-    this.servicio.ValidarUsuarioGerente().then(
+    this.servicio.ValidarUsuarioGerente(this.empresa).then(
       (res)=>{
         this.usuarioDirectorOperativo = res[0].DirectorOperativoId;
         this.servicio.obtenerFirmas(this.usuarioDirectorOperativo).then(
@@ -306,7 +308,7 @@ export class VerOrdenCompraComponent implements OnInit {
   }
 
   AuxContable(): any {
-    this.servicio.ValidarUsuarioGerente().then(
+    this.servicio.ValidarUsuarioGerente(this.empresa).then(
       (res)=>{
         this.usuarioAuxContable = res[0].AuxContableId;
         this.servicio.obtenerFirmas(this.usuarioAuxContable).then(
@@ -446,7 +448,7 @@ export class VerOrdenCompraComponent implements OnInit {
   }
 
   obtenerfirmaGerente(): any {
-    this.servicio.ValidarUsuarioGerente().then(
+    this.servicio.ValidarUsuarioGerente(this.empresa).then(
       (res)=>{
         this.usuarioGerenteAdmin = res[0].GerenteAdministrativoId;
         this.servicio.obtenerFirmas(this.usuarioGerenteAdmin).then(

@@ -82,6 +82,7 @@ export class EditarOrdenesComponent implements OnInit {
   cliente = [];
   clienteXdefecto: any[];
   unegocios = [];
+  empresa: string;
 
   constructor(
     private servicio: SPServicio,
@@ -198,6 +199,7 @@ export class EditarOrdenesComponent implements OnInit {
         this.ObjOrdenCompra = respuesta;
         console.log(this.ObjOrdenCompra);
         console.log(2)
+        this.empresa = this.ObjOrdenCompra.EmpresaSolicitante
         this.CodigoEstado = this.ObjOrdenCompra.CodigoEstado;
         if (this.CodigoEstado === 5 || this.CodigoEstado === 6 || this.CodigoEstado === 8) {
           this.SoloLectura = false;
@@ -288,7 +290,7 @@ export class EditarOrdenesComponent implements OnInit {
   }
 
   obtenerfirmaGerente(): any {
-    this.servicio.ValidarUsuarioGerente().then(
+    this.servicio.ValidarUsuarioGerente(this.empresa).then(
       (res)=>{
         this.usuarioGerenteAdmin = res[0].GerenteAdministrativoId;
         this.servicio.obtenerFirmas(this.usuarioGerenteAdmin).then(
