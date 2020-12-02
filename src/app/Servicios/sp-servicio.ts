@@ -166,8 +166,8 @@ export class SPServicio {
         return respuesta;
     }
 
-    ValidarUsuarioGerente() {
-        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.getAll(); 
+    ValidarUsuarioGerente(empresa) {
+        let respuesta = this.ObtenerConfiguracion().web.lists.getByTitle(environment.ListaUsuariosAprobadores).items.filter("EmpresaSolicitante eq '"+empresa+"'").getAll(); 
         return respuesta;
     } 
 
